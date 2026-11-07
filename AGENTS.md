@@ -36,6 +36,10 @@
 
 春季男孩样段由 `scripts/build-spring-boy.py` 从锁定的原角色 GLB 生成 `public/models/spring-boy.glb`，复用原角色图集；不覆盖原资产。模型的身体、左右眼和侧脸细节分别保留节点，角色运行组件放在现有模型目录；构建脚本不参与日常网站启动。
 
+夏季男孩由 `scripts/build-summer-boy.py` 生成 `public/models/summer-boy.glb`，复用已确认春季男孩的头脸纸片及原夏季角色的表情、手臂、冲浪板和图集。两季模型加工共用 `scripts/paper_parts.py` 的分件与纸片几何函数；夏季身体、笑脸、左右手臂保持独立节点。仅美术重建时运行生成脚本，不加入网站启动流程，不覆盖原模型、春季资产或共享贴图。
+
+秋冬男孩由 `scripts/build-autumn-winter-boys.py` 生成 `public/models/autumn-boy.glb`、`public/models/winter-boy.glb`，复用已确认春季的正侧面头脸及原角色图集。秋季保留白鹤及独立手臂；冬季正面/步行侧面分别保留身体、眼部、表情与手脚节点，步行四肢继续使用原枢轴。生成器共用 `scripts/paper_parts.py`，不改变春夏资产或路线，不加入日常启动流程。
+
 ## 推进与验收
 
 - 阶段、状态、交付物和已知缺口以 `MIGRATION.md` 为准；一次只推进当前阶段，完成后汇报并停在阶段边界。

@@ -13,6 +13,8 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { AnimateMesh } from "../components/AnimateMesh";
 import { SpringBoyFront, SpringBoySideBody, SpringBoySideFace, SpringBoySideSmile } from "./spring-boy";
+import { SummerBoy } from "./summer-boy";
+import { AutumnBoy, WinterBoyFront, WinterBoySide } from "./autumn-winter-boys";
 
 const offsets = {
   winterFrontCharacterRef: 0.0124,
@@ -32,7 +34,7 @@ const progressMoveRanges = {
 };
 
 export default function Model(props) {
-  const { nodes, materials } = useGLTF(
+  const { nodes } = useGLTF(
     "/models/Moving_Characters-transformed.glb",
   );
 
@@ -152,7 +154,7 @@ export default function Model(props) {
     ref.current.lookAt(targetLookAt.current);
   };
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!curves?.movingCharactersCurve) return;
 
     // console.log(gsap.globalTimeline.getChildren().length);
@@ -371,6 +373,7 @@ export default function Model(props) {
             ]}
           >
             <group ref={winterFrontCharacterSwapRef} position={[0, 0, 0]}>
+              {/* Original winter front meshes retained for reference; not rendered:
               <mesh
                 geometry={
                   nodes.Moving_Characters_Winter_arm_left_front.geometry
@@ -412,16 +415,18 @@ export default function Model(props) {
                   nodes.Moving_Characters_Winter_front_smile_face.position
                 }
               />
-              {/* <mesh
+              <mesh
                 geometry={nodes.Moving_Characters_Winter_happy_face.geometry}
                 material={texture_1}
                 position={nodes.Moving_Characters_Winter_happy_face.position}
-              /> */}
+              />
               <mesh
                 geometry={nodes.Moving_Characters_Winter_head_front.geometry}
                 material={texture_1}
                 position={nodes.Moving_Characters_Winter_head_front.position}
               />
+              */}
+              <WinterBoyFront material={texture_1} />
             </group>
           </AnimateMesh>
         </group>
@@ -443,6 +448,7 @@ export default function Model(props) {
             ]}
           >
             <group ref={winterSideCharacterSwapRef} position={[0, -5, 0]}>
+              {/* Original winter side meshes retained for reference; not rendered:
               <mesh
                 ref={winterLeftArmRef}
                 geometry={nodes.Moving_Characters_Winter_left_arm.geometry}
@@ -488,6 +494,11 @@ export default function Model(props) {
                   nodes.Moving_Characters_Winter_side_face_smile.position
                 }
               />
+              */}
+              <WinterBoySide material={texture_1}
+                leftArmRef={winterLeftArmRef} rightArmRef={winterRightArmRef}
+                leftFootRef={winterLeftFootRef} rightFootRef={winterRightFootRef}
+                faceRef={winterSideFaceRef} smileRef={winterSideFaceSmileRef} />
             </group>
           </AnimateMesh>
         </group>
@@ -623,6 +634,7 @@ export default function Model(props) {
               },
             ]}
           >
+            {/* Original autumn girl meshes retained for reference; not rendered:
             <mesh
               geometry={nodes.Moving_Characters_Fall_character.geometry}
               material={texture_1}
@@ -643,6 +655,8 @@ export default function Model(props) {
               material={texture_1}
               position={nodes.Moving_Characters_Fall_right_arm.position}
             />
+            */}
+            <AutumnBoy material={texture_1} />
           </AnimateMesh>
         </group>
       </group>
@@ -686,6 +700,7 @@ export default function Model(props) {
               },
             ]}
           >
+            {/* Original summer girl meshes retained for reference; not rendered:
             <mesh
               geometry={nodes.Moving_Characters_Summer_character.geometry}
               material={texture_1}
@@ -706,6 +721,8 @@ export default function Model(props) {
               material={texture_1}
               position={nodes.Moving_Characters_Summer_right_arm.position}
             />
+            */}
+            <SummerBoy material={texture_1} />
           </AnimateMesh>
         </group>
       </group>

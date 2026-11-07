@@ -33,6 +33,18 @@ node tests/scene-start-check.mjs
 # 核对春季男孩模型分层、原资产与眨眼周期
 node tests/spring-boy-check.mjs
 
+# 核对夏季男孩分层、已确认头脸来源、笑脸和手臂枢轴
+node tests/summer-boy-check.mjs
+
+# 核对秋冬分层、小眼比例、四肢枢轴及春夏资产不变
+node tests/autumn-winter-boy-check.mjs
+
+# 核对六版角色几何、表情遮挡及原女孩模型/贴图/引用保留
+node tests/character-integrity-check.mjs
+
+# 检查本次四季角色运行组件
+npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx
+
 # 生成静态文件
 npm run build
 ```
@@ -45,6 +57,18 @@ npm run build
 
 ```powershell
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-spring-boy.py
+```
+
+夏季男孩由 `scripts/build-summer-boy.py` 复用已确认的春季头脸和原夏季分件生成，不重写春季资产；两季共用 `scripts/paper_parts.py` 的几何工具。夏季生成器校验输入的春季模型哈希，春季外观有意修改后须先核对夏季头脸再更新锁定值。本机已验证：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-summer-boy.py
+```
+
+秋季乘鹤与冬季正面/步行由同一脚本生成；需先保留上述已确认春季模型及夏季模型，生成器会核对输入资产并保留原白鹤和步行枢轴。本机已验证：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-autumn-winter-boys.py
 ```
 
 ## 静态产物预览与部署

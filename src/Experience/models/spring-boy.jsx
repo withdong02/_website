@@ -1,17 +1,27 @@
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { blinkScale } from "../utils/blink-scale.js";
 import { useExperienceStore } from "../../store/useExperienceStore";
 
-function PaperPart({ node, material, blinking = false }) {
-  const ref = useRef();
+// Keep the original face drawing and split eyes for blinking; short hair and
+// clothes are cut-paper silhouettes. The original GLB remains untouched.
+
+export function PaperPart({ node, material, blinking = false, meshRef }) {
+  const localRef = useRef();
+  const ref = meshRef ?? localRef;
+  const coloredMaterial = useMemo(() => {
+    const copy = material.clone();
+    copy.vertexColors = true;
+    return copy;
+  }, [material]);
+  useEffect(() => () => coloredMaterial.dispose(), [coloredMaterial]);
   useFrame(({ clock }) => {
     if (blinking && ref.current && !useExperienceStore.getState().isInfoPanelOpen) {
       ref.current.scale.y = node.scale.y * blinkScale(clock.elapsedTime);
     }
   });
-  return <mesh ref={ref} name={node.name} geometry={node.geometry} material={material}
+  return <mesh ref={ref} name={node.name} geometry={node.geometry} material={coloredMaterial}
     position={node.position} rotation={node.rotation} scale={node.scale} />;
 }
 

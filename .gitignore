@@ -27,6 +27,7 @@ dist-ssr
 .tmp/
 .sites-runtime/
 .workbuddy/
+__pycache__/
 .env
 .env.*
 !.env.example
