@@ -40,6 +40,8 @@
 
 秋冬男孩由 `scripts/build-autumn-winter-boys.py` 生成 `public/models/autumn-boy.glb`、`public/models/winter-boy.glb`，复用已确认春季的正侧面头脸及原角色图集。秋季保留白鹤及独立手臂；冬季正面/步行侧面分别保留身体、眼部、表情与手脚节点，步行四肢继续使用原枢轴。生成器共用 `scripts/paper_parts.py`，不改变春夏资产或路线，不加入日常启动流程。
 
+金秋相册小样由 `scripts/build-autumn-album.py` 生成独立的 `public/models/autumn-album-sample.glb` 与 `public/textures/autumn-album-sample.webp`。仅在这些新资产中提取原秋季底景与部分装饰，重铺纸纹、烘焙阴影并新增分层相册、独立照片插页、成片黄叶与低矮纸艺配景；原 `Scene_4_Fall.jsx`、原 GLB、图集和 Blender 源文件完整保留。深秋采用暖金底景和鲜明黄色树冠，落叶按树下聚集、前景散落分布。新运行组件为 `src/Experience/models/autumn-album-sample.jsx`；照片内容不与底景合并，尚未实现的相册页面不得显示为可用入口。
+
 ## 推进与验收
 
 - 阶段、状态、交付物和已知缺口以 `MIGRATION.md` 为准；一次只推进当前阶段，完成后汇报并停在阶段边界。

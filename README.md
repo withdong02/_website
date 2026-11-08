@@ -42,8 +42,11 @@ node tests/autumn-winter-boy-check.mjs
 # 核对六版角色几何、表情遮挡及原女孩模型/贴图/引用保留
 node tests/character-integrity-check.mjs
 
-# 检查本次四季角色运行组件
-npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx
+# 核对金秋小样、相册分层和可换照片 UV
+node tests/autumn-album-check.mjs
+
+# 检查四季角色与秋季样片运行组件
+npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx src/Experience/models/autumn-album-sample.jsx
 
 # 生成静态文件
 npm run build
@@ -72,6 +75,14 @@ npm run build
 ```
 
 ## 静态产物预览与部署
+
+金秋最小样片使用单独模型和烘焙贴图，原秋季组件、模型和图集保留。重建需要本机 Blender、Python 3 与 Pillow；不会在网站启动时执行：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-autumn-album.py
+```
+
+生成 `public/models/autumn-album-sample.glb` 和 `public/textures/autumn-album-sample.webp`。运行组件 `autumn-album-sample.jsx` 的 `photoUrl` 可替换占位插页，使用单独整图 UV，不需要重烘焙底景。当前相册是入口造型样片，尚未连接独立相册页。
 
 本地可用普通静态服务检查 `dist/`：
 
