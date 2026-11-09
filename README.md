@@ -51,11 +51,14 @@ node tests/spring-introduction-check.mjs
 # 核对春季回声原轮廓、双眼、纸片厚度与原素材保留
 node tests/spring-echo-check.mjs
 
+# 核对春季蝴蝶高度、吊线顶部、三只配蝶与其余配景保留
+node tests/spring-butterflies-check.mjs
+
 # 检查四季角色与秋季样片运行组件
 npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx src/Experience/models/autumn-album-sample.jsx
 
 # 检查春季场景与新介绍组件
-npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx src/Experience/models/spring-echo.jsx
+npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx src/Experience/models/spring-echo.jsx src/Experience/models/spring-butterflies.jsx
 
 # 生成静态文件
 npm run build
@@ -98,6 +101,14 @@ npm run build
 ```
 
 输出 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，原史莱姆模型和共享贴图继续保留。
+
+春季蝴蝶生成器抬高原主蝶、缩短原吊线，新增三只较小纸蝶；独立输出中保留同一合并网格里的其余配景。仅在美术重建时运行，依赖同上并使用 Blender 自带 Draco 编码器，运行时沿用本站现有解码器：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-spring-butterflies.py
+```
+
+输出 `public/models/spring-butterflies.glb` 与 `public/textures/spring-butterfly-paper.webp`，不覆盖原 GLB 和图集。
 
 ## 静态产物预览与部署
 

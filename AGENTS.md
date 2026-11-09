@@ -41,6 +41,8 @@
 
 春季回声的原轮廓与双眼复制为 `public/images/spring-echo.svg`；`scripts/build-spring-echo.py` 据此生成独立 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，复用原春季干净纸纹。运行组件 `src/Experience/models/spring-echo.jsx` 替换原史莱姆挂载位；重建不依赖 `D:\Blog` 的绝对路径，不覆盖或修改旧博客、原 GLB 和图集。
 
+春季蝴蝶由 `scripts/build-spring-butterflies.py` 生成独立 `public/models/spring-butterflies.glb` 与 `public/textures/spring-butterfly-paper.webp`。主蝶抬高并缩短吊线，顶部固定点保持原位；复用原蝶的纸片轮廓，另添三只较小的浅杏、淡紫和湖蓝纸蝶。原合并配景只拆出吊线，其余部件保留几何与原 UV；运行组件 `src/Experience/models/spring-butterflies.jsx` 替换原蝶和该合并网格，不覆盖原资产。
+
 夏季男孩由 `scripts/build-summer-boy.py` 生成 `public/models/summer-boy.glb`，复用已确认春季男孩的头脸纸片及原夏季角色的表情、手臂、冲浪板和图集。两季模型加工共用 `scripts/paper_parts.py` 的分件与纸片几何函数；夏季身体、笑脸、左右手臂保持独立节点。仅美术重建时运行生成脚本，不加入网站启动流程，不覆盖原模型、春季资产或共享贴图。
 
 秋冬男孩由 `scripts/build-autumn-winter-boys.py` 生成 `public/models/autumn-boy.glb`、`public/models/winter-boy.glb`，复用已确认春季的正侧面头脸及原角色图集。秋季保留白鹤及独立手臂；冬季正面/步行侧面分别保留身体、眼部、表情与手脚节点，步行四肢继续使用原枢轴。生成器共用 `scripts/paper_parts.py`，不改变春夏资产或路线，不加入日常启动流程。

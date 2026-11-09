@@ -10,6 +10,7 @@ import { useGLTF } from "@react-three/drei";
 import { AnimateMesh } from "../components/AnimateMesh";
 import SpringIntroduction from "./spring-introduction";
 import SpringEcho from "./spring-echo";
+import SpringButterflies from "./spring-butterflies";
 import { useCurveProgressStore } from "../../store/useCurveProgressStore";
 import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
@@ -149,11 +150,7 @@ export default function Model(props) {
         />
       </AnimateMesh>
 
-      <mesh
-        geometry={nodes.Scene_2_Spring_2_Baked_Butterfly.geometry}
-        material={texture_2}
-        position={nodes.Scene_2_Spring_2_Baked_Butterfly.position}
-      />
+      <SpringButterflies />
       <mesh
         geometry={nodes.Scene_2_Spring_3_Fish.geometry}
         material={texture_3}
@@ -355,11 +352,6 @@ export default function Model(props) {
         geometry={nodes.Scene_2_Spring_4_Baked.geometry}
         material={texture_4}
         position={nodes.Scene_2_Spring_4_Baked.position}
-      />
-      <mesh
-        geometry={nodes.Scene_2_Spring_2_Baked.geometry}
-        material={texture_2}
-        position={nodes.Scene_2_Spring_2_Baked.position}
       />
     </group>
   );
