@@ -26,36 +26,56 @@ backdrop = extract(obj, parts, {0}, "spring-introduction-backdrop")
 texture = ROOT / "public/textures/spring-introduction.webp"
 text_texture = ROOT / "public/textures/spring-introduction-text.webp"
 copy = ["Hi, I'm withdong02.\nYou can call me ddd.\n\nI'm an information security\nstudent at HDU.\n\nGlad to meet you here.", "A little corner for\nthings I learn,\nmoments I want to remember,\nand music I enjoy.\n\nTake your time\nand wander around."]
-# Erase only baked letter shadows, using the surrounding paper at each pixel.
+# Replace inked areas with intact paper grain, matching the surrounding lighting.
 result = subprocess.run([shutil.which("python"), "-c", r'''
-from PIL import Image, ImageFilter, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageFilter, ImageDraw, ImageFont, ImageStat
 import sys, json
 im = Image.open(sys.argv[1]).convert('RGBA')
-for box in [(475,1490,900,1780),(1160,1510,1615,1800)]:
+
+def lighting(image):
+    w,h = image.size
+    boxes = [(0,0,12,12),(w-12,0,w,12),(0,h-12,12,h),(w-12,h-12,w,h)]
+    tl,tr,bl,br = [ImageStat.Stat(image.crop(box).convert('RGB')).mean for box in boxes]
+    field = Image.new('RGB',(w,h))
+    pixels = []
+    for y in range(h):
+        top,bottom = 1-y/(h-1),y/(h-1)
+        for x in range(w):
+            left,right = 1-x/(w-1),x/(w-1)
+            pixels.append(tuple(round(top*(left*tl[c]+right*tr[c])+bottom*(left*bl[c]+right*br[c])) for c in range(3)))
+    field.putdata(pixels)
+    return field
+
+def detail(image):
+    gray = image.convert('L')
+    return ImageStat.Stat(ImageChops.subtract(gray,gray.filter(ImageFilter.GaussianBlur(2)),offset=128)).stddev[0]
+
+checks = []
+for box in [(455,1490,900,1780),(1160,1510,1615,1800)]:
     patch = im.crop(box)
-    paper = patch.filter(ImageFilter.MedianFilter(31))
-    mask = Image.new('L',patch.size)
-    before = patch.convert('L')
-    local = paper.convert('L')
-    mask.putdata([255 if a < b - 7 else 0 for a,b in zip(before.get_flattened_data(),local.get_flattened_data())])
-    mask = mask.filter(ImageFilter.MaxFilter(5))
-    pixels, unknown = patch.load(), mask.load()
-    pending = {(x,y) for y in range(mask.height) for x in range(mask.width) if unknown[x,y]}
-    for _ in range(40):
-        if not pending: break
-        updates = {}
-        for x,y in pending:
-            neighbors = [pixels[a,b] for a,b in [(x-1,y),(x+1,y),(x,y-1),(x,y+1)] if 0<=a<mask.width and 0<=b<mask.height and not unknown[a,b]]
-            if neighbors: updates[x,y] = tuple(round(sum(v[c] for v in neighbors)/len(neighbors)) for c in range(4))
-        for point,color in updates.items(): pixels[point] = color; unknown[point] = 0
-        pending.difference_update(updates)
-    assert not pending
-    repaired = patch
-    old_dark = sum(v<35 for v in before.get_flattened_data())
+    w,h = patch.size
+    assert patch.getchannel('A').getextrema()==(255,255)
+    donor = im.crop((420,420,420+w,420+h)).convert('RGB')
+    grain = ImageChops.subtract(donor,lighting(donor),offset=128)
+    paper = ImageChops.add(grain,lighting(patch),offset=-128)
+    mask = Image.new('L',(w,h))
+    mask.putdata([min(255,min(x,y,w-1-x,h-1-y)*255//14) for y in range(h) for x in range(w)])
+    repaired = Image.composite(paper,patch.convert('RGB'),mask).convert('RGBA')
+    repaired.putalpha(patch.getchannel('A'))
+    old_dark = sum(v<35 for v in patch.convert('L').get_flattened_data())
     new_dark = sum(v<35 for v in repaired.convert('L').get_flattened_data())
-    assert old_dark>100 and new_dark<old_dark*.05,(old_dark,new_dark)
+    assert old_dark>100 and new_dark==0,(old_dark,new_dark)
     im.paste(repaired,box)
-im.save(sys.argv[2],quality=94,exact=True,method=6)
+    checks.append((box,detail(donor.crop((20,20,w-20,h-20)))))
+im.save(sys.argv[2],quality=97,exact=True,method=6)
+decoded = Image.open(sys.argv[2])
+ratios = []
+for box,reference in checks:
+    region = decoded.crop(box)
+    ratio = detail(region.crop((20,20,region.width-20,region.height-20)))/reference
+    assert .75<ratio<1.25,('Paper texture lost detail',ratio)
+    ratios.append(round(ratio,3))
+print('Paper grain ratios after encoding:',ratios,file=sys.stderr)
 font = ImageFont.truetype(sys.argv[3],64)
 letters = Image.new('RGBA',(2048,1024))
 draw = ImageDraw.Draw(letters)
@@ -64,7 +84,7 @@ for i,body in enumerate(json.loads(sys.argv[5])):
     box = draw.multiline_textbbox((0,0),body,font=font,spacing=18)
     width,height = box[2]-box[0],box[3]-box[1]
     assert width<990 and height<990
-    draw.multiline_text((16+i*1024-box[0],16-box[1]),body,font=font,spacing=18,fill=(223,223,201,255))
+    draw.multiline_text((16+i*1024-box[0],16-box[1]),body,font=font,spacing=18,fill=(190,194,169,255))
     sizes.append([width,height])
 letters.save(sys.argv[4],lossless=True,exact=True,method=6)
 print(json.dumps(sizes))
