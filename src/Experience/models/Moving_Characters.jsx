@@ -47,7 +47,7 @@ export default function Model(props) {
   const targetPosition = useRef(new THREE.Vector3(0, 0, 0));
   const targetLookAt = useRef(new THREE.Vector3(0, 0, 0));
   const upVector = useRef(new THREE.Vector3(0, 1, 0));
-  const previousScrollProgress = useRef(0);
+  const previousScrollProgress = useRef(useCurveProgressStore.getState().scrollProgress);
 
   // Consider refacotring at this point this just a bloated file XDDD
 
