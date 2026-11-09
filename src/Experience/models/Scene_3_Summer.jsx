@@ -11,7 +11,7 @@ import gsap from "gsap";
 import { AnimateMesh } from "../components/AnimateMesh";
 
 export default function Model(props) {
-  const { nodes, materials } = useGLTF(
+  const { nodes } = useGLTF(
     "/models/Scene_3_Summer-transformed.glb",
   );
 
@@ -28,26 +28,15 @@ export default function Model(props) {
   const FLOAT_AMOUNT = 3;
   const DURATION = 0.4;
 
-  const createHoverHandlers = (signRef, baseY) => ({
-    onPointerEnter: (e) => {
-      e.stopPropagation();
-      document.body.style.cursor = "pointer";
-      gsap.to(signRef.current.position, {
-        y: baseY + FLOAT_AMOUNT,
-        duration: DURATION,
-        ease: "power2.out",
-      });
-    },
-    onPointerLeave: (e) => {
-      e.stopPropagation();
-      document.body.style.cursor = "auto";
-      gsap.to(signRef.current.position, {
-        y: baseY,
-        duration: DURATION,
-        ease: "power2.inOut",
-      });
-    },
-  });
+  const hoverSign = (event, signRef, baseY, entering) => {
+    event.stopPropagation();
+    document.body.style.cursor = entering ? "pointer" : "auto";
+    gsap.to(signRef.current.position, {
+      y: baseY + (entering ? FLOAT_AMOUNT : 0),
+      duration: DURATION,
+      ease: entering ? "power2.out" : "power2.inOut",
+    });
+  };
 
   const starbucksBaseY =
     nodes.Scene_3_Summer_4_Starbucks_Sign_Summer_3_2.position.y - 2;
@@ -70,28 +59,32 @@ export default function Model(props) {
         geometry={nodes.Scene_3_Summer_Shanghai.geometry}
         material={texture_1}
         position={nodes.Scene_3_Summer_Shanghai.position}
-        {...createHoverHandlers(starbucksSignRef, starbucksBaseY)}
+        onPointerEnter={event => hoverSign(event, starbucksSignRef, starbucksBaseY, true)}
+        onPointerLeave={event => hoverSign(event, starbucksSignRef, starbucksBaseY, false)}
       />
 
       <mesh
         geometry={nodes.Scene_3_Summer_Austin.geometry}
         material={texture_1}
         position={nodes.Scene_3_Summer_Austin.position}
-        {...createHoverHandlers(blenderSignRef, blenderBaseY)}
+        onPointerEnter={event => hoverSign(event, blenderSignRef, blenderBaseY, true)}
+        onPointerLeave={event => hoverSign(event, blenderSignRef, blenderBaseY, false)}
       />
 
       <mesh
         geometry={nodes.Scene_3_Summer_1_Cali.geometry}
         material={texture_1}
         position={nodes.Scene_3_Summer_1_Cali.position}
-        {...createHoverHandlers(figmaSignRef, figmaBaseY)}
+        onPointerEnter={event => hoverSign(event, figmaSignRef, figmaBaseY, true)}
+        onPointerLeave={event => hoverSign(event, figmaSignRef, figmaBaseY, false)}
       />
 
       <mesh
         geometry={nodes.Scene_3_Summer_1_Boston.geometry}
         material={texture_1}
         position={nodes.Scene_3_Summer_1_Boston.position}
-        {...createHoverHandlers(psychiatristSignRef, psychiatristBaseY)}
+        onPointerEnter={event => hoverSign(event, psychiatristSignRef, psychiatristBaseY, true)}
+        onPointerLeave={event => hoverSign(event, psychiatristSignRef, psychiatristBaseY, false)}
       />
 
       <mesh

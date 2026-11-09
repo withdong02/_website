@@ -1,13 +1,13 @@
-import React, { useRef } from "react";
+import React from "react";
 import "./ZoomSlider.css";
 import { useCameraStore } from "../../store/useCameraStore";
 
 const ZoomSlider = () => {
   const setZoom = useCameraStore((state) => state.setZoom);
 
-  const handleChange = useRef((e) => {
+  const handleChange = (e) => {
     setZoom(parseFloat(e.target.value));
-  });
+  };
 
   return (
     <div className="zoom-slider-wrapper">
@@ -31,7 +31,7 @@ const ZoomSlider = () => {
         max={3}
         step={0.01}
         defaultValue={1}
-        onChange={handleChange.current}
+        onChange={handleChange}
       />
 
       <div className="zoom-icon">

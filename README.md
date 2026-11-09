@@ -24,41 +24,11 @@ npm ci
 # 本地开发预览，仅监听本机
 npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
-# 核对资源引用、文件名大小写与本站解码器
-node tests/static-assets-check.mjs
+# 全部七项检查：资源、路线、角色、金秋、春季介绍/回声/蝴蝶
+npm run check
 
-# 核对春季起点、首次滚动衔接与循环进度
-node tests/scene-start-check.mjs
-
-# 核对春季男孩模型分层、原资产与眨眼周期
-node tests/spring-boy-check.mjs
-
-# 核对夏季男孩分层、已确认头脸来源、笑脸和手臂枢轴
-node tests/summer-boy-check.mjs
-
-# 核对秋冬分层、小眼比例、四肢枢轴及春夏资产不变
-node tests/autumn-winter-boy-check.mjs
-
-# 核对六版角色几何、表情遮挡及原女孩模型/贴图/引用保留
-node tests/character-integrity-check.mjs
-
-# 核对金秋小样、相册分层和可换照片 UV
-node tests/autumn-album-check.mjs
-
-# 核对春季左右介绍、曲面字形、原背板与字体保留
-node tests/spring-introduction-check.mjs
-
-# 核对春季回声原轮廓、双眼、纸片厚度与原素材保留
-node tests/spring-echo-check.mjs
-
-# 核对春季蝴蝶高度、吊线顶部、三只配蝶与其余配景保留
-node tests/spring-butterflies-check.mjs
-
-# 检查四季角色与秋季样片运行组件
-npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx src/Experience/models/autumn-album-sample.jsx
-
-# 检查春季场景与新介绍组件
-npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx src/Experience/models/spring-echo.jsx src/Experience/models/spring-butterflies.jsx
+# 检查现役源码、工具与检查脚本
+npm run lint
 
 # 生成静态文件
 npm run build
@@ -66,7 +36,11 @@ npm run build
 
 重复验证构建时可用 `npm run build -- --emptyOutDir=false` 避免清空已有产物；发布前另用新的空输出目录构建并核对文件清单，避免夹带历史产物。
 
-不要执行 `gen:models` 来启动网站；它是上游模型加工脚本，会改写生成模型，不属于日常预览步骤。
+角色各阶段检查已合并到 `tests/character-integrity-check.mjs`，统一验证四季六版角色的几何、面部遮挡、动作枢轴、眨眼和原素材保留。其余检查各自保护独立的资源或场景约束，不参与网页打包。保留的上游原秋季 JSX、第三方静态文件和本地临时目录不纳入 ESLint；新源码和检查脚本仍完整检查。
+
+Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 前大小计算，默认阈值为 500 kB。当前主包约 1.90 MB，构建估算 gzip 后约 553 kB，主要包含 Three.js 核心、WebGPU/WebGL 支持和 React 等运行依赖；GLB、贴图和检查脚本不计入这个 JS 大小。清理整模块注册后已减少约 103 kB，阈值保留默认值；构建可以成功，首屏下载与解析成本仍需在性能验收时核查。
+
+素材生成脚本只在美术重建时手动运行，不属于日常预览步骤。已移除会覆盖运行组件、且与当前导出接口不一致的旧 `gen:models` 批处理入口。
 
 春季男孩由 `scripts/build-spring-boy.py` 基于原模型重建，复用原图集。只有修改美术生成逻辑时才需要 Blender；日常启动不需要运行它。本机已验证 Blender 5.2.3 LTS：
 

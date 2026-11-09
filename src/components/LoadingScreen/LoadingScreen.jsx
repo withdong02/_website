@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
@@ -23,10 +23,9 @@ const LoadingScreen = () => {
   const brRef = useRef(null);
   const loadingRef = useRef(null);
 
-  useEffect(() => {
-    if (active && progress === 100) return;
-    setMaxProgress((prev) => (progress > prev ? progress : prev));
-  }, [progress, active]);
+  if (progress > maxProgress && !(active && progress === 100)) {
+    setMaxProgress(progress);
+  }
 
   useGSAP(() => {
     if (!revealed) return;

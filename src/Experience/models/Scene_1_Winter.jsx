@@ -11,7 +11,7 @@ import { AnimateMesh } from "../components/AnimateMesh";
 import { useFrame } from "@react-three/fiber";
 
 export default function Model(props) {
-  const { nodes, materials } = useGLTF(
+  const { nodes } = useGLTF(
     "/models/Scene_1_Winter-transformed.glb",
   );
 
@@ -24,8 +24,7 @@ export default function Model(props) {
   const fire2Ref = useRef();
   const fire3Ref = useRef();
 
-  useFrame((state, delta) => {
-    const time = state.clock.elapsedTime;
+  useFrame((state) => {
 
     const snapIndex = Math.floor(state.clock.elapsedTime * 2.2);
     const randomAngle =

@@ -32,10 +32,12 @@ export const useKTX2Texture = (textureUrl, options = {}) => {
   const material = useMemo(() => {
     if (!texture) return null;
 
+    /* eslint-disable react-hooks/immutability -- Loader textures are mutable Three.js GPU resources. */
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.flipY = flipY;
 
     texture.generateMipmaps = false;
+    /* eslint-enable react-hooks/immutability */
 
     return new THREE.MeshBasicMaterial({
       map: texture,
@@ -43,7 +45,7 @@ export const useKTX2Texture = (textureUrl, options = {}) => {
       alphaTest: alphaTestValue,
       side: side === "front" ? THREE.FrontSide : THREE.DoubleSide,
     });
-  }, [texture, transparent, alphaTestValue, side]);
+  }, [texture, transparent, alphaTestValue, side, flipY]);
 
   return material;
 };

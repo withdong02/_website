@@ -5,9 +5,14 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Original fall JSX is retained for reference; generated/vendor/local files are not project source.
+  globalIgnores([
+    'dist/**', 'public/**', 'raw_assets/**',
+    '.tmp/**', '.sites-runtime/**', '.workbuddy/**',
+    'src/Experience/models/Scene_4_Fall.jsx',
+  ]),
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -25,5 +30,10 @@ export default defineConfig([
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
+  },
+  {
+    files: ['scripts/**/*.js', 'tests/**/*.mjs', '*.config.js'],
+    extends: [js.configs.recommended],
+    languageOptions: { globals: globals.node },
   },
 ])

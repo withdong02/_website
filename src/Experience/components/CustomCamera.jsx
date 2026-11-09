@@ -1,7 +1,5 @@
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { useFrame, useThree } from "@react-three/fiber";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useCurveProgressStore } from "../../store/useCurveProgressStore";
 import * as THREE from "three";
 import { PerspectiveCamera } from "@react-three/drei";
@@ -10,7 +8,7 @@ import { useResponsiveStore } from "../../store/useResponsiveStore";
 import { useExperienceStore } from "../../store/useExperienceStore";
 
 const CustomCamera = () => {
-  const { camera, pointer } = useThree();
+  const { pointer } = useThree();
   const curves = useCurveProgressStore((state) => state.curves);
   const isInfoPanelOpen = useExperienceStore((state) => state.isInfoPanelOpen);
   const targetPosition = useRef(new THREE.Vector3(0, 0, 0));
@@ -36,7 +34,6 @@ const CustomCamera = () => {
     if (isInfoPanelOpen) return;
     const scrollProgressPosition =
       useCurveProgressStore.getState().scrollProgress;
-    // const offsetScrollCameraPosition = (scrollProgressPosition + 0.5) % 1;
 
     curves.cameraPathCurve.getPointAt(
       scrollProgressPosition,

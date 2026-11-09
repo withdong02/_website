@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import React, { useEffect, useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import * as THREE from "three/webgpu";
-import * as TSL from "three/tsl";
+import { WebGPURenderer } from "three/webgpu";
 
 import Scene from "./Scene";
 import ReactLenis from "lenis/react";
 import gsap from "gsap";
-import { useRef } from "react";
 import { useCurveProgressStore } from "../store/useCurveProgressStore";
 import { useGSAP } from "@gsap/react";
 import { useExperienceStore } from "../store/useExperienceStore";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
-extend(THREE);
 
 const Experience = () => {
   const setScrollProgress = useCurveProgressStore(
@@ -65,7 +61,7 @@ const Experience = () => {
       lenisInstance.off("scroll", syncScroll);
       gsap.ticker.remove(update);
     };
-  }, [lenis, isExperienceReady]);
+  }, [lenis, isExperienceReady, setScrollProgress]);
 
   return (
     <>
@@ -88,7 +84,7 @@ const Experience = () => {
           }}
           flat
           gl={async (props) => {
-            const renderer = new THREE.WebGPURenderer({
+            const renderer = new WebGPURenderer({
               ...props,
               logarithmicDepthBuffer: true,
             });
@@ -97,7 +93,6 @@ const Experience = () => {
           }}
         >
           <Scene />
-          {/* <OrbitControls /> */}
           <color attach="background" args={["#111111"]} />
         </Canvas>
         <div

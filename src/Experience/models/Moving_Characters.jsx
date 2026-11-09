@@ -49,8 +49,6 @@ export default function Model(props) {
   const upVector = useRef(new THREE.Vector3(0, 1, 0));
   const previousScrollProgress = useRef(useCurveProgressStore.getState().scrollProgress);
 
-  // Consider refacotring at this point this just a bloated file XDDD
-
   const winterFrontCharacterRef = useRef();
   const winterSideCharacterRef = useRef();
   const springFrontCharacterRef = useRef();
@@ -157,7 +155,6 @@ export default function Model(props) {
   useFrame(() => {
     if (!curves?.movingCharactersCurve) return;
 
-    // console.log(gsap.globalTimeline.getChildren().length);
     const scrollProgress = useCurveProgressStore.getState().scrollProgress;
 
     moveObjectOrCharacter(

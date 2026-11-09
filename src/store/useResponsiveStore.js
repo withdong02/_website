@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import { createCurves } from "../Experience/components/Curves.js";
 
-export const useResponsiveStore = create((set) => ({
+export const useResponsiveStore = create(() => ({
   isMobile: window.innerWidth < 764,
 }));
 
