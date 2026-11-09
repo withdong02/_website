@@ -45,8 +45,14 @@ node tests/character-integrity-check.mjs
 # 核对金秋小样、相册分层和可换照片 UV
 node tests/autumn-album-check.mjs
 
+# 核对春季左右介绍、曲面字形、原背板与字体保留
+node tests/spring-introduction-check.mjs
+
 # 检查四季角色与秋季样片运行组件
 npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx src/Experience/models/autumn-album-sample.jsx
+
+# 检查春季场景与新介绍组件
+npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx
 
 # 生成静态文件
 npm run build
@@ -73,6 +79,14 @@ npm run build
 ```powershell
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-autumn-winter-boys.py
 ```
+
+春季介绍使用独立背板和透明字形图集，原模型、图集与 SlimeBox 字体保留。仅在文案/排字素材改变后重建；需要 Blender、Python 3 和 Pillow（本机已验证 12.3.0）：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-spring-introduction.py
+```
+
+输出 `public/models/spring-introduction.glb`、`public/textures/spring-introduction.webp` 和 `public/textures/spring-introduction-text.webp`。修改文案时同步核对 `DESIGN.md`、生成脚本和介绍检查；原介绍同时包含字形和烘焙字痕，不能只改字形后保留旧字痕。
 
 ## 静态产物预览与部署
 

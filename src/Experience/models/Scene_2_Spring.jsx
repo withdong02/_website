@@ -5,22 +5,19 @@ Files: raw_assets\Spring.glb [1.47MB] > C:\Users\andre\My Stuff\VS Code Projects
 */
 
 import { useKTX2Texture } from "../utils/ktxLoader";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { AnimateMesh } from "../components/AnimateMesh";
-import { useGSAP } from "@gsap/react";
+import SpringIntroduction from "./spring-introduction";
 import { useCurveProgressStore } from "../../store/useCurveProgressStore";
 import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 
 export default function Model(props) {
-  const { nodes, materials } = useGLTF(
+  const { nodes } = useGLTF(
     "/models/Scene_2_Spring-transformed.glb",
   );
 
-  const texture_1 = useKTX2Texture("/textures/Scene_2_Spring_1.webp", {
-    side: "double",
-  });
   const texture_2 = useKTX2Texture("/textures/Scene_2_Spring_2.webp", {
     side: "double",
   });
@@ -68,15 +65,9 @@ export default function Model(props) {
     prevProgress.current = curr;
   });
 
-  useFrame(() => {});
-
   return (
     <group {...props} dispose={null}>
-      <mesh
-        geometry={nodes.Scene_2_Spring_1_Baked.geometry}
-        material={texture_1}
-        position={nodes.Scene_2_Spring_1_Baked.position}
-      />
+      <SpringIntroduction />
       <mesh
         ref={gateRightRef}
         geometry={nodes.Scene_2_Spring_2_Gate_Right.geometry}
