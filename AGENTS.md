@@ -13,7 +13,7 @@
 - 本阶段用同样纸艺风格的小男孩替换原小女孩；参考原女生的四季穿搭，逐一覆盖 4 套季节服装、6 个主要角色视角/动作（冬 2、春 2、夏 1、秋 1）及原表情切换，不只替换一套。`summerWaveRef` 是海浪环境物件，不计为男孩版本。具体样稿待视觉确认，不默认制作用户本人的肖像。
 - 角色外观以原项目偏二维的薄纸片为准，避免立体玩偶式脸部、厚衣服、圆鼓体积和光晕。换装须保留可动分层与枢轴，眨眼、表情、骑行车轮、步行手脚、动静姿态切换均列入验收；不得用一整张静态人物图替换可动角色。尚未证实的原有眨眼实现需单独核对，不能将设计稿当作动画已完成。
 - 男孩五官以自然、清淡为准，不刻意做浓眉大眼；原女性部件不能直接压缩后视为已对齐概念稿。实装需对照已确认的轮廓、衣着与比例检查，几何与动作检查通过不等于美术验收通过。
-- 回声（Echo）本阶段暂不使用，是否永久弃用尚未确定；保留旧素材，不因角色方向变化自行删除。若重新启用，沿用原始不规则轮廓和两只圆眼，无手脚、嘴或额外动物特征；分离体叫墨团（blot）。旧博客的首页编排与样式不自动成为新站约束。
+- 回声（Echo）按用户最新确认，作为湖蓝色纸艺摆件替换春季蓝色史莱姆，保留轻微呼吸起伏；沿用旧博客原始不规则轮廓和两只圆眼，无手脚、嘴或额外动物特征，不作为新增导览角色。分离体叫墨团（blot），本轮不接入分离或旧博客交互。保留旧素材，不因角色方向变化自行删除；旧博客的首页编排与样式不自动成为新站约束。
 
 ## 目录约定
 
@@ -38,6 +38,8 @@
 春季男孩样段由 `scripts/build-spring-boy.py` 从锁定的原角色 GLB 生成 `public/models/spring-boy.glb`，复用原角色图集；不覆盖原资产。模型的身体、左右眼和侧脸细节分别保留节点，角色运行组件放在现有模型目录；构建脚本不参与日常网站启动。
 
 春季左右介绍由 `scripts/build-spring-introduction.py` 生成独立的 `public/models/spring-introduction.glb`、背板 `public/textures/spring-introduction.webp` 与透明字形图集 `public/textures/spring-introduction-text.webp`，复用原 SlimeBox 字体和背板几何，仅替换旧介绍字形并清理对应烘焙字痕；原模型、图集和字体不覆盖。运行组件 `src/Experience/models/spring-introduction.jsx` 接入现有春季组件，人物、道具和路线沿用原实现。文案以 `DESIGN.md` 为准。
+
+春季回声的原轮廓与双眼复制为 `public/images/spring-echo.svg`；`scripts/build-spring-echo.py` 据此生成独立 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，复用原春季干净纸纹。运行组件 `src/Experience/models/spring-echo.jsx` 替换原史莱姆挂载位；重建不依赖 `D:\Blog` 的绝对路径，不覆盖或修改旧博客、原 GLB 和图集。
 
 夏季男孩由 `scripts/build-summer-boy.py` 生成 `public/models/summer-boy.glb`，复用已确认春季男孩的头脸纸片及原夏季角色的表情、手臂、冲浪板和图集。两季模型加工共用 `scripts/paper_parts.py` 的分件与纸片几何函数；夏季身体、笑脸、左右手臂保持独立节点。仅美术重建时运行生成脚本，不加入网站启动流程，不覆盖原模型、春季资产或共享贴图。
 

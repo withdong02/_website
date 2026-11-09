@@ -9,6 +9,7 @@ import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { AnimateMesh } from "../components/AnimateMesh";
 import SpringIntroduction from "./spring-introduction";
+import SpringEcho from "./spring-echo";
 import { useCurveProgressStore } from "../../store/useCurveProgressStore";
 import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
@@ -94,17 +95,14 @@ export default function Model(props) {
 
       <AnimateMesh
         axis={"y"}
-        amplitude={0.1}
+        amplitude={0.035}
         speed={2}
         property={"scale"}
         offset={1.75}
         position={nodes.Scene_2_Spring_2_Baked_Slime.position}
-        base={1.1}
+        base={1}
       >
-        <mesh
-          geometry={nodes.Scene_2_Spring_2_Baked_Slime.geometry}
-          material={texture_2}
-        />
+        <SpringEcho />
       </AnimateMesh>
 
       <AnimateMesh

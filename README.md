@@ -48,11 +48,14 @@ node tests/autumn-album-check.mjs
 # 核对春季左右介绍、曲面字形、原背板与字体保留
 node tests/spring-introduction-check.mjs
 
+# 核对春季回声原轮廓、双眼、纸片厚度与原素材保留
+node tests/spring-echo-check.mjs
+
 # 检查四季角色与秋季样片运行组件
 npx eslint src/Experience/models/Moving_Characters.jsx src/Experience/models/spring-boy.jsx src/Experience/models/summer-boy.jsx src/Experience/models/autumn-winter-boys.jsx src/Experience/models/autumn-album-sample.jsx
 
 # 检查春季场景与新介绍组件
-npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx
+npx eslint src/Experience/models/Scene_2_Spring.jsx src/Experience/models/spring-introduction.jsx src/Experience/models/spring-echo.jsx
 
 # 生成静态文件
 npm run build
@@ -87,6 +90,14 @@ npm run build
 ```
 
 输出 `public/models/spring-introduction.glb`、`public/textures/spring-introduction.webp` 和 `public/textures/spring-introduction-text.webp`。修改文案时同步核对 `DESIGN.md`、生成脚本和介绍检查；原介绍同时包含字形和烘焙字痕，不能只改字形后保留旧字痕。
+
+春季回声复用复制到 `public/images/spring-echo.svg` 的旧博客原轮廓与双眼，生成独立湖蓝纸片和纸纹图集；只在美术重建时运行，依赖同上，不需要访问旧博客目录：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-spring-echo.py
+```
+
+输出 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，原史莱姆模型和共享贴图继续保留。
 
 ## 静态产物预览与部署
 
