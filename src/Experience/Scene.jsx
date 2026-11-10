@@ -4,7 +4,7 @@ import { useThree } from "@react-three/fiber";
 import MovingCharacters from "./models/Moving_Characters";
 import Winter from "./models/Scene_1_Winter";
 import Spring from "./models/Scene_2_Spring";
-import Summer from "./models/Scene_3_Summer";
+import Summer from "./models/summer-blog";
 import Fall from "./models/autumn-album-sample";
 import CustomCamera from "./components/CustomCamera";
 import { useExperienceStore } from "../store/useExperienceStore";

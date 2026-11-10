@@ -84,6 +84,14 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 
 输出 `public/models/spring-butterflies.glb` 与 `public/textures/spring-butterfly-paper.webp`，不覆盖原 GLB 和图集。
 
+夏季博客场景保留原完整虚线路线与海滨配景，替换四个照片点位，局部修补原烘焙残影并生成深蓝图集；同一模型包含天花板上的贝壳纸风铃，复用现有纸纹并绕固定吊点轻摆。生成脚本只用于美术重建，日常启动不运行它；依赖本机 Blender、Python 3 与 Pillow，无需访问旧博客目录：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-summer-blog.py
+```
+
+输出 `public/models/summer-blog.glb`、`public/textures/summer-blog-1.webp`、`summer-blog-2.webp`、`summer-blog-3.webp`、`summer-blog-paper.webp` 和 `summer-blog-text.webp`；第四张夏季图集、角色资产、原场景组件及全部上游源文件保留。修改简介或模块文案时同步 `DESIGN.md`、生成脚本与 `tests/summer-blog-check.mjs`。当前四个模块仅为场景素材，真实页面跳转在博客接入阶段实现。
+
 ## 静态产物预览与部署
 
 金秋最小样片使用单独模型和烘焙贴图，原秋季组件、模型和图集保留。重建需要本机 Blender、Python 3 与 Pillow；不会在网站启动时执行：
