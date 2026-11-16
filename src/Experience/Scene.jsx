@@ -2,7 +2,7 @@ import React, { Suspense, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 
 import MovingCharacters from "./models/Moving_Characters";
-import Winter from "./models/Scene_1_Winter";
+import Winter from "./models/winter-letters";
 import Spring from "./models/Scene_2_Spring";
 import Summer from "./models/summer-blog";
 import Fall from "./models/autumn-album-sample";

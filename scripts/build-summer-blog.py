@@ -72,14 +72,19 @@ texture_jobs = []
 for index in (1, 2, 3):
     # Masks follow original UV triangles, so unrelated shared-atlas props are untouched.
     mesh = sources[f"Scene_3_Summer_{index}"].data
-    selection = {0, 15} if index == 1 else {0} if index == 3 else {2}
+    selection = {0, 15} if index == 1 else {0} if index == 3 else {2, 16}
     selected = {v for part in selection for v in parts[f"Scene_3_Summer_{index}"][part]["vertices"]}
     triangles = []
     mesh.calc_loop_triangles()
     for triangle in mesh.loop_triangles:
         if all(v in selected for v in triangle.vertices):
             triangles.append([list(mesh.uv_layers.active.data[i].uv) for i in triangle.loops])
-    texture_jobs.append({"index": index, "triangles": triangles})
+    job = {"index": index, "triangles": triangles}
+    if index == 2:
+        water = {v for part in (0, 1, 3) for v in parts["Scene_3_Summer_2"][part]["vertices"]}
+        job["wave_triangles"] = [[list(mesh.uv_layers.active.data[i].uv) for i in triangle.loops]
+                                 for triangle in mesh.loop_triangles if all(v in water for v in triangle.vertices)]
+    texture_jobs.append(job)
 
 config = {"copy": COPY, "jobs": texture_jobs}
 config_path = ROOT / ".tmp/summer-blog-build-input.json"
@@ -135,11 +140,18 @@ for job in config['jobs']:
     if index in (2,3):
         original=im.copy(); pixels=[]
         for r,g,b in original.get_flattened_data():
-            if index==2 and not (r>g*1.1 and g>b*1.12): pixels.append((r,g,b)); continue
-            light=r/177.31
-            pixels.append(tuple(max(0,min(255,round(light*c))) for c in (67,78,132)))
+            light=(r/177.31 if r>g*1.1 and g>b*1.12 else b/140) if index==2 else r/177.31
+            pixels.append(tuple(max(0,min(255,round(light*c))) for c in (23,61,85)))
         recolored=Image.new('RGB',im.size); recolored.putdata(pixels)
         im=Image.composite(recolored,im,mask)
+        if index==2:
+            wave_mask=Image.new('L',im.size); wave_draw=ImageDraw.Draw(wave_mask)
+            for triangle in job['wave_triangles']:
+                wave_draw.polygon([(round(u*(im.width-1)),round((1-v)*(im.height-1))) for u,v in triangle],fill=255)
+            wave_mask=wave_mask.filter(ImageFilter.MaxFilter(5))
+            waves=Image.new('RGB',im.size)
+            waves.putdata([tuple(max(0,min(255,round(b/140*c))) for c in (50,90,115)) for r,g,b in original.get_flattened_data()])
+            im=Image.composite(waves,im,wave_mask)
     else:
         im=Image.composite(im,Image.new('RGB',im.size),mask)
     im.save(root/f'public/textures/summer-blog-{index}.webp',quality=97,method=6)
@@ -257,7 +269,7 @@ for slug,source_name,w,h in placements:
         outline=[(-w/2,-h/2),(w/2,-h/2),(w/2,h*.34),(w*.06,h*.34),(-w*.03,h/2),(-w*.37,h/2),(-w*.44,h*.34),(-w/2,h*.34)]
         face("summer-categories-underlay",shifted(center,.10,.10),outline,"#be9e76",.075)
     else: outline=rectangle(w,h,True)
-    face(f"summer-{slug}-shadow",shifted(center,.025,-.025),outline,"#3b4168",.065)
+    face(f"summer-{slug}-shadow",shifted(center,.025,-.025),outline,"#112c3f",.065)
     paper=face(f"summer-{slug}-paper",center,outline,"#ddc49e",.10)
     paper["module"]=slug
     paper["source_waypoint"]=source_name
@@ -297,7 +309,7 @@ for index,(angle,z,size) in enumerate([(-137,6.25,.75),(-167,5.95,.52)]):
     center=surface
     outline=[(-.65,-.13),(-.78,.0),(-.73,.16),(-.55,.24),(-.40,.21),(-.32,.42),(-.12,.48),(.07,.40),(.15,.25),(.32,.31),(.51,.24),(.59,.07),(.48,-.12)]
     outline=[(x*size,y*size) for x,y in outline]
-    face(f"summer-cloud-{index}-shadow",shifted(center,.025,-.025),outline,"#3c4671",.02)
+    face(f"summer-cloud-{index}-shadow",shifted(center,.025,-.025),outline,"#17384c",.02)
     face(f"summer-cloud-{index}",center,outline,"#a9b6ce",.055)
 
 # A single light paper chime hangs from the actual ceiling, above the wall copy.

@@ -100,7 +100,15 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-autumn-album.py
 ```
 
-生成 `public/models/autumn-album-sample.glb` 和 `public/textures/autumn-album-sample.webp`。运行组件 `autumn-album-sample.jsx` 的 `photoUrl` 可替换占位插页，使用单独整图 UV，不需要重烘焙底景。当前相册是入口造型样片，尚未连接独立相册页。
+生成 `public/models/autumn-album-sample.glb`、`public/textures/autumn-album-sample.webp`、标牌 `autumn-gallery-label.webp` 与书页文字 `autumn-book-text.webp`。当前为树间照片绳庭院，配地面展开书、落叶、纸松鼠及天花纸鹤；五张插页各有独立整图 UV，书页文字也独立于纸纹。运行组件 `autumn-album-sample.jsx` 的 `photoUrls` 按顺序替换，原 `photoUrl` 仍可统一替换，不需要重烘焙底景。默认使用固定保存的 `public/textures/autumn-photo-previews.webp` 风景示意图集（内置 imagegen 生成，非用户真实照片；重建脚本不重新生成该图集）。入口造型尚未连接独立相册页。
+
+冬季来信素材重建：
+
+```powershell
+& 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-winter-letters.py
+```
+
+生成独立 `public/models/winter-letters.glb`、`public/textures/winter-contact-label.webp` 与 `public/textures/winter-snow-wall.webp`，保留原冬季模型、图集及组件。新组件 `winter-letters.jsx` 复用原纸纹并保留环境动画枢轴，暖化小屋，邮筒放到最低台阶，标牌为 `contact me`。雪白背板由脚本按连续世界空间纸纹与实际遮挡重新烘焙，并检查接缝两侧颜色；旧清理图集保留，验证记录见 `DESIGN.md`。尚未接通独立留言与联系页面。
 
 本地可用普通静态服务检查 `dist/`：
 

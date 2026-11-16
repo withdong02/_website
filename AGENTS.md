@@ -7,9 +7,9 @@
 - 先保留 Hugo 渲染文章，避免同时重写 Markdown、短代码、代码高亮和评论系统。新站最终应可独立构建，不长期依赖 `D:\Blog` 的绝对路径。
 - 最终部署到用户自己的服务器：优先输出可由 Nginx 等静态服务器托管的 `dist/`，不绑定第三方托管平台，不要求生产机运行 Vite 开发服务。生产配置和发布需另行授权。
 - 首页优先场景探索，正文优先阅读。保留真实文章地址、浏览器历史和返回场景的位置；不将正文绘制到三维贴图里。
-- 春季是默认入口，承载自我介绍与音乐；夏季进入独立博客页面，秋季进入独立相册页面，冬季用途暂定。保持现有路线、滚动节奏与区域间探索距离，不在三维场景内展开完整博客或相册界面。
-- 当前推进顺序为先准备四季场景素材、确认入口造型与摆位，再接通博客和相册页面。春季素材已获用户确认，当前实装夏季；随后处理冬季及四季连接。夏季保留原完整虚线路线、红叉与问号装饰，以原四个照片点位承载 Articles、Tags、Categories、Archives 英文模块入口及短说明；深蓝背板/地面、较浅分层海浪，摄影内容移出，墙面只加少量云，不新增大笔记本。简介为 `I'm a student focused on backend development. Here I share my notes, experiments, and projects.`，不再使用 AI 工程师介绍。入口素材与真实跳转分阶段验收；细节以 `DESIGN.md` 和 `MIGRATION.md` 3.3 为准。
-- 四季各自的地面与背板使用一致主色，保留纸艺纹理与空间层次；秋季以金黄色为方向。具体构图与色值在素材验证后确定。
+- 春季是默认入口，承载自我介绍与音乐；夏季进入独立博客页面，秋季进入独立相册页面。冬季于 2026-11-14 确认采用“雪夜来信：留言与联系”，暖木小屋、窗光、门灯及台阶下方的 `contact me` 邮筒素材已实装；2026-11-16 用户认可当前四季整体视觉，独立页面尚未接通。保持现有路线、滚动节奏与区域间探索距离，不在三维场景内展开完整内容界面。
+- 当前推进顺序为先准备四季场景素材、确认入口造型与摆位，再接通博客和相册页面。当前四季素材已获用户整体视觉认可，继续按阶段完成四季连接与运行、设备验收。夏季保留原完整虚线路线、红叉与问号装饰，以原四个照片点位承载 Articles、Tags、Categories、Archives 英文模块入口及短说明；深蓝背板/地面、较浅分层海浪，摄影内容移出，墙面只加少量云，不新增大笔记本。简介为 `I'm a student focused on backend development. Here I share my notes, experiments, and projects.`，不再使用 AI 工程师介绍。入口素材与真实跳转分阶段验收；细节以 `DESIGN.md` 和 `MIGRATION.md` 3.3 为准。
+- 四季各自的地面与背板使用一致主色，保留纸艺纹理与空间层次；秋季以金黄色为方向。2026-11-16 用户确认夏季加深为海蓝 `#173D55`，冬季改为雪白 `#E6E9EC` 并加入轻雪；春秋沿用现有配色。
 - 本阶段用同样纸艺风格的小男孩替换原小女孩；参考原女生的四季穿搭，逐一覆盖 4 套季节服装、6 个主要角色视角/动作（冬 2、春 2、夏 1、秋 1）及原表情切换，不只替换一套。`summerWaveRef` 是海浪环境物件，不计为男孩版本。具体样稿待视觉确认，不默认制作用户本人的肖像。
 - 角色外观以原项目偏二维的薄纸片为准，避免立体玩偶式脸部、厚衣服、圆鼓体积和光晕。换装须保留可动分层与枢轴，眨眼、表情、骑行车轮、步行手脚、动静姿态切换均列入验收；不得用一整张静态人物图替换可动角色。尚未证实的原有眨眼实现需单独核对，不能将设计稿当作动画已完成。
 - 男孩五官以自然、清淡为准，不刻意做浓眉大眼；原女性部件不能直接压缩后视为已对齐概念稿。实装需对照已确认的轮廓、衣着与比例检查，几何与动作检查通过不等于美术验收通过。
@@ -51,7 +51,9 @@
 
 秋冬男孩由 `scripts/build-autumn-winter-boys.py` 生成 `public/models/autumn-boy.glb`、`public/models/winter-boy.glb`，复用已确认春季的正侧面头脸及原角色图集。秋季保留白鹤及独立手臂；冬季正面/步行侧面分别保留身体、眼部、表情与手脚节点，步行四肢继续使用原枢轴。生成器共用 `scripts/paper_parts.py`，不改变春夏资产或路线，不加入日常启动流程。
 
-金秋相册小样由 `scripts/build-autumn-album.py` 生成独立的 `public/models/autumn-album-sample.glb` 与 `public/textures/autumn-album-sample.webp`。仅在这些新资产中提取原秋季底景与部分装饰，重铺纸纹、烘焙阴影并新增分层相册、独立照片插页、成片黄叶与低矮纸艺配景；原 `Scene_4_Fall.jsx`、原 GLB、图集和 Blender 源文件完整保留。深秋采用暖金底景和鲜明黄色树冠，落叶按树下聚集、前景散落分布。新运行组件为 `src/Experience/models/autumn-album-sample.jsx`；照片内容不与底景合并，尚未实现的相册页面不得显示为可用入口。
+冬季来信素材由 `scripts/build-winter-letters.py` 生成独立的 `public/models/winter-letters.glb`、`public/textures/winter-contact-label.webp` 与 `public/textures/winter-snow-wall.webp`，运行组件 `src/Experience/models/winter-letters.jsx` 替换原冬季挂载位。复用原四张图集中的纸纹、积雪及配景，背板以连续世界空间纸纹和实际灰度遮挡重新烘焙为雪白，地面通过线性材质增益提亮，暖木墙与门保留原 UV 和烘焙层次，窗格与门灯为暖黄色薄纸件；邮筒立在最低台阶地面，已按用户反馈绕底部放大 40%，标牌严格为 `contact me`，字号由 136 增至 174，尚未接页面前不设假链接。旧的 `public/textures/winter-letters-wall.webp` 留存为早期清理图集，当前运行背板改用生成器烘焙的 `winter-snow-wall.webp`；生成时检查 UV 接缝两侧颜色，避免提亮蓝色图集造成竖向色差。原图集、模型、`Scene_1_Winter.jsx` 与男孩动作保留，鹿头、三层火苗、音符和雪人手臂沿用原九个动画枢轴及参数。轻雪由 `winter-snowfall.jsx` 的 56 个薄纸实例绘制，落点与循环由 `winter-snow.js` 计算，限定在冬季区域；离开该区域、打开信息面板或页面隐藏时停止更新，系统减少动态效果开启时隐藏。模型采用现有本地 Draco 解码链路。
+
+金秋庭院由 `scripts/build-autumn-album.py` 生成独立的 `public/models/autumn-album-sample.glb` 与 `public/textures/autumn-album-sample.webp`，运行组件仍为 `src/Experience/models/autumn-album-sample.jsx`。用户于 2026-11-11 确认重新构图：树间两道照片绳、五张独立插页作为统一照片墙入口造型；移除圆窗、圆月、相册台和悬空单张照片，改用侧后方小方窗。同日预览后要求增加落叶、降低树高、恢复地面展开大书，在左右页分别写简短场景文案，并补少量动物；天花板用少量纸鹤替换旧灯笼空线。当前选用两只薄纸松鼠、两簇蘑菇与三只折纸鹤，长椅和低矮植物继续作配景。保留琥珀金纸纹、台阶及原角色动作；允许男孩在画面中自然遮挡照片和树，其他季节也按此前后层次原则处理，只避免实际三维穿插，不强制将所有物件抬到男孩上方。`public/textures/autumn-photo-previews.webp` 是内置 imagegen 生成并固定保存的风景示意图集，不代表用户真实照片；`photoUrls` 可逐张替换，兼容原 `photoUrl`。五图与书页文字保留独立 UV，文案为 `Golden leaves, quiet days.` 和 `Little moments, kept here.`，字形图集由生成器输出到 `public/textures/autumn-book-text.webp`；竖屏不得单独搬走插页使其脱离绳和树。原 `Scene_4_Fall.jsx`、原 GLB、图集和 Blender 源文件完整保留；尚未实现的相册页面不得显示为可用入口。
 
 ## 推进与验收
 
