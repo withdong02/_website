@@ -34,7 +34,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const scene = path.join(stage, 'site');
   const blog = path.join(stage, 'blog');
   execFileSync(process.execPath, [path.join(root, 'node_modules/vite/bin/vite.js'), 'build', '--outDir', scene], { cwd: root, stdio: 'inherit' });
-  execFileSync('hugo', ['--source', 'blog', '--destination', blog, '--baseURL', '/', '--noBuildLock'], { cwd: root, stdio: 'inherit' });
+  execFileSync('hugo', ['--source', 'blog', '--destination', blog, '--noBuildLock'], { cwd: root, stdio: 'inherit' });
   mergeBlog(scene, blog);
   for (const route of ['posts', 'tags', 'categories', 'archives']) {
     if (!readFileSync(path.join(scene, route, 'index.html'), 'utf8').includes('Back to scene')) throw new Error(`Missing blog route: ${route}`);

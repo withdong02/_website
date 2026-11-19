@@ -35,7 +35,7 @@
 
 上游 Blender 源文件先保留原目录与名称，核查后再决定是否调整。新写源码优先小写 kebab-case；迁入的文章和上游文件先保留名称与路径。
 
-博客纸艺外观复用夏季场景的独立纸纤维贴图与 SlimeBox 英文字体，分别复制到 `blog/assets/images/paper.webp` 和 `blog/assets/fonts/slime-box.woff2`，由 Hugo 指纹管线发布；不从场景运行目录动态读取，不引入三维资源。栏目英文标题使用该字体，中文正文与代码继续使用现有字体。
+博客纸艺外观复用夏季场景的独立纸纤维贴图与 SlimeBox 英文字体，分别复制到 `blog/assets/images/paper.webp` 和 `blog/assets/fonts/slime-box.woff2`，由 Hugo 指纹管线发布；不从场景运行目录动态读取，不引入三维资源。栏目英文标题使用该字体，中文正文与代码继续使用现有字体。场景与博客的标签页图标统一使用回声 PNG，分别保存在 `public/images/echo-favicon.png` 与 `blog/assets/images/echo-favicon.png`，两份保持字节一致；旧上游图标保留，但不再作为场景 favicon 引用。
 
 春季男孩样段由 `scripts/build-spring-boy.py` 从锁定的原角色 GLB 生成 `public/models/spring-boy.glb`，复用原角色图集；不覆盖原资产。模型的身体、左右眼和侧脸细节分别保留节点，角色运行组件放在现有模型目录；构建脚本不参与日常网站启动。
 

@@ -13,12 +13,13 @@ execFileSync('hugo', [
 
 function checkPage(file) {
   const html = readFileSync(file, 'utf8');
-  const pageUrl = new URL(path.relative(output, file).split(path.sep).join('/'), 'http://127.0.0.1:1313/');
+  const pageUrl = new URL(path.relative(output, file).split(path.sep).join('/'), 'https://blog.withdong02.top/');
   assert.doesNotMatch(html, /(?:three|lenis|vite\/client|@react-three)/i);
+  assert.doesNotMatch(html.split('</head>')[0], /noindex|127\.0\.0\.1|localhost/);
   const references = [...html.matchAll(/(?:href|src)="([^"]+)"/g), ...html.matchAll(/url\("([^"]+)"\)/g)];
   for (const [, reference] of references) {
     const url = new URL(reference, pageUrl);
-    if (url.origin !== 'http://127.0.0.1:1313') continue;
+    if (url.origin !== 'https://blog.withdong02.top') continue;
     if (url.pathname === '/' && url.searchParams.get('resume') === 'blog') continue;
     const target = path.join(output, decodeURIComponent(url.pathname),
       url.pathname.endsWith('/') ? 'index.html' : '');
