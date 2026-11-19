@@ -1,5 +1,75 @@
 # 上游与第二阶段基线
 
+## 一棵树的四季接入（2026-11-18）
+
+- 用户认可静态稿并要求树左移、长椅加长、落花落叶增多，修订构图留存 `.tmp/tree-seasons-concept-v2.png` 和同名 JSON（包含确认依据）。据此替换博客横幅中的回声及独立底座；春季三维回声、原 SVG 和生成器保留，旧博客未改。
+- 从修订稿的树/长椅设计重新生成独立透明生产图集，未裁切样稿充当生产素材。`blog/assets/images/season-tree-atlas.png` 为 1254×1254、1,079,947 字节，四格按春/夏/秋/冬排列，SHA-256 `d2e827bdf83108e7e9b36196985ae6024298a83aa0bf5412dd72dce5f42bc150`；`season-bench-atlas.png` 为 2172×724、760,815 字节，冬格带薄雪，SHA-256 `3a5bcca6ce252641a90f225be49d93190dcb8499713062050357053c6000d3d9`。两图均实际检查 RGBA alpha 范围 0–255、格内边界和透明留白，提示词嵌入 PNG 并附 JSON。实际树根约在单格 93%、椅脚 87.5% 高度，CSS 按测量位置对齐。
+- Hugo 图像管线输出 q90 WebP 并指纹发布，两张运行图分别 428,450 与 164,090 字节，合计约579KiB；网页继续负责地景、季节名、控件与飘落物。树在约33%、长椅在55%；桌面树可见约108px高，椅面可见约108px宽。横幅维持170px/130px和38秒循环，手机减少飘落数量，不增加三维、视频或依赖。
+- `npm run blog:build`、12项 `npm run check`、lint与 `git diff --check` 通过；博客检查覆盖生产图集本地URL、四季树/椅图层、横幅无回声、分页与历史文章。设计检测器返回空列表。浏览器实际检查四季桌面、四季深色、390px及320px无横向溢出，暂停/恢复、离屏停播、减少动态效果静态春景和第二页无横幅正常。时间轴截帧与媒体偏好调试已通过刷新及清除模拟恢复，预览正常自动播放。
+- 真实浏览器截图 `.tmp/tree-window-{spring,summer,autumn,winter,mobile}.jpg`、`.tmp/tree-window-dark-{spring,summer,autumn,winter}.jpg`；四季裁切拼合 `.tmp/tree-window-overview.png`。独立外观复查 `ship`，无待修项。预览服务重新启动为本机 Hugo 进程；真机及线上未验收，未推送或发布，本轮未重复未改动的三维生产构建。
+
+## 回声四季小窗（2026-11-18，替换纸海横幅）
+
+- 按用户确认方案替换乘船：回声固定中央、桌面宽 68px/手机宽 56px，小窗高度仍为 170px/130px。复用原胶囊眼 SVG 和纸纹，四季地景与花瓣/叶片/雪均为轻量切纸几何，不增加第三方资源或依赖，春季三维模型未改。
+- 四套纸景共用 38 秒 CSS 时间轴，8 秒停留加 1.5 秒交叠；局部花瓣、纸浪、落叶和雪与既有暂停/离屏控制一同停播。减少动态效果下移除动画，只保留春景，读者不必等待动画进入文章。
+- 浏览器通过时间轴定位核对四季端点，分别只有对应季节不透明；8.75 秒交叠帧春夏不透明度各约 0.5，手动暂停时全部为 paused。模拟减少动态效果后只显示春景，按钮隐藏；离屏后 data-running=false。1440px 回声计算宽 68px、390px/320px 为 56px，窄屏无横向溢出；深色实际截图覆盖冬季，其他季节深色未逐一目视。
+- 截图 `.tmp/echo-seasons-{spring,summer,autumn,winter,mobile,dark}.jpg`，四季实际浏览器截帧的裁切拼合为 `.tmp/echo-seasons-overview.png`；本地调试的时间轴定位与媒体偏好模拟已通过刷新和清除模拟恢复，交付预览正常自动播放。独立外观复查为 `ship`，无待修项。Hugo 构建、12 项检查与 lint 通过，设计检测器返回空列表；未复测真机，未推送或发布。
+
+## 回声纸海横幅与春季胶囊双眼（2026-11-18）
+
+- 后续按用户反馈放大为 190px/148px 折纸船，船舷分前后两层包住回声下部；回声与船位于同一运动组，共同上下起伏和轻摇，30 秒单程往返，保留横幅高度与运行控制。1440px、390px、320px 及深色浏览器检查无横向溢出，乘船关系可见，暂停/恢复可用；截图 `.tmp/echo-boat-{desktop,mobile,dark-320}.jpg`。本轮只改横幅模板与 CSS，没有重建或修改春季模型。
+- 用户选定第一种纸海方向并要求更矮，新增主列表第一页横幅，桌面 170px、手机 130px。复用已有纸纤维和回声轮廓，波浪与纸船以几何 SVG 分层，CSS 轻起伏、纸船 26 秒穿行，不增加三维、视频或外部依赖。`echo-drift.js` 只控制播放状态；默认静态可见，离屏/隐藏暂停，读者手动暂停优先，减少动态效果时静态展示。
+- 依据用户已更新的 `blog/assets/images/echo-favicon.png`，将规范 SVG 双眼改为 34×76、rx17 的竖胶囊，原中心与身体轮廓保留。生成器使用上下半圆和直边构建胶囊薄片，仍为身体/双眼三个独立网格；重建 `spring-echo.glb` 为 61,908 字节、SHA-256 `d2e9e5aff2a2a2b1afa4199ee9fe46c42f756730a97a72389c8445b8e64a47c8`，与 `dist/models/spring-echo.glb` 一致。原春季 GLB 与共享图集哈希检查通过，原呼吸运行组件未改；生成器同时复制 SVG 到博客，检查保证两处字节一致。
+- `npm run check` 的 12 项检查、lint、Hugo 构建和 Vite 构建通过，Vite 既有大包提示仍在。新增运行状态检查覆盖进入/离开视口、手动暂停保持、页面隐藏、实时减少动态效果和静态降级；既有模型检查增加实际胶囊几何比例及源形象一致性。设计检测器对横幅目标返回空列表。
+- 浏览器检查 1440px、390px、320px、深色、暂停与播放；实际离屏时 `data-running=false`，模拟减少动态效果时 CSS 动画为 `none`，第 2 页不显示横幅，320px 无横向溢出。截图 `.tmp/echo-drift-{desktop,mobile,dark}.jpg`，模型从重建 GLB 独立导入 Blender 并渲染到 `.tmp/spring-echo-capsules.png`；这不是完整春季场景运行复测。独立外观复查结论 `ship`，无待修项；真机、完整春季运行和用户最终美术确认未完成，未推送或发布。
+
+## Notebook 分页与卡片圆角（2026-11-18）
+
+- 使用 Hugo 原生 `Paginate`，在站点覆盖层接入每页 10 篇的首页、Articles 及标签/分类文章列表，共用底部分页导航；不修改主题副本。分页链接使用各自的 Pager URL 并定位到 `#articles`，第 2 页的 Previous 返回当前栏目第 1 页，归档不分页。参考 Hugo 官方文档 <https://gohugo.io/methods/page/paginate/>。
+- 扩展既有博客检查，覆盖 10/10/1、首页与 Articles 排序一致、21 篇无遗漏无重复、Java 标签 10/1、单页无分页控件及第 2 页返回链接。`npm run check` 的 11 项检查、`npm run lint`、`npm run blog:build` 和 `git diff --check` 通过。
+- 桌面实际点击 Next → 第 2 页 → 第 3 页，分别显示 10、10、1 篇，最后一页没有 Next；320px 中间页的箭头与页码单行排列且无横向溢出，Previous 返回 `/posts/`。文章卡计算圆角为 10px，保留折角并裁切边缘；截图 `.tmp/paper-blog-pagination-{desktop,mobile}.jpg`。回声横向动画仅提出构思，本轮未制作；未做真机验收，未推送或发布。
+
+## Notebook 纸艺外观预览（2026-11-17）
+
+- 后续按用户截图反馈统一站名/导航字体，并隐藏四个栏目总览的重复大标题；仅改站点 CSS 与公共布局，不修改主题模板。1440px、390px、320px 浏览器检查通过，320px 导航无溢出；Tags 总览标题隐藏而 Java 标签详情标题保留。截图为 `.tmp/paper-blog-nav-{desktop,mobile,320}.jpg`。
+- 只调整站点覆盖层 `blog/assets/css/site.css` 与 `blog/layouts/partials/head.html`，未修改主题副本、文章或三维场景。浅蓝灰底纸、暖白纸页、海蓝文字、小折角与轻薄阴影呼应夏季场景；深色模式采用深海蓝，保留用户指定的交互网格与摆正图片。
+- 纸纤维来自现有 `public/textures/summer-blog-paper.webp`，复制到 `blog/assets/images/paper.webp`：23,222 字节，SHA-256 `6774ce6bac0c4a3456a7d3739d90940a93dc980c858137d2f7c7917e87c2225d`。英文字体来自现有 `public/fonts/SlimeBox.woff2`，复制到 `blog/assets/fonts/slime-box.woff2`：18,516 字节，SHA-256 `7b4ca9246041f1425d92de20e86538194891549802a9e428603907f052f8ccb4`。均核对复制前后哈希，通过 Hugo 指纹资源发布，不依赖旧博客或三维资源路径；字体沿用上游素材，其再分发边界仍见下文既有第三方资源说明。
+- `npm run blog:build`、`node --test tests/blog-preview-check.mjs`、`npm run lint` 和 `git diff --check` 通过；生成 89 个静态页，21 篇文章及本地目标、锚点、代码与图片检查通过。设计检测器对两个变更目标返回空列表，没有新增视觉断言或重复三维构建。
+- 浏览器检查 1440×900 列表、390×844 列表/标签/正文、320×720 正文及深色标签页；窄屏采样没有整页横向溢出，主题切换和 Tags → Java → 文章可用，正文图片计算样式为 `transform: none`。截图保留为 `.tmp/paper-blog-{desktop,mobile,tags,dark,article-mobile,320}.jpg`。初次查看时纸纹过强，已压淡至卡片约 12% 的纹理层；用户美术确认、真机和生产验收未完成，未发布。
+
+## 本地预览连接恢复（2026-11-17）
+
+- 用户反馈文章和 Tags 无法进入。实际检查发现 1313 没有监听进程，首页、标签、分类、归档和文章请求均报连接拒绝；浏览器保留的首页不代表服务仍在运行。
+- 改为通过 Windows `Start-Process -WindowStyle Hidden` 启动独立 Hugo 预览进程，仅监听 `127.0.0.1:1313`，未修改页面源码或生产配置。后台启动与日志位置已记入 `README.md`。
+- 首页、Tags、Java 标签详情、Categories、Archives 和中文文章地址均返回 HTTP 200；浏览器实际点击 Tags → Java →《Java序列化与反序列化》成功，正文与九个代码块可见。截图为 `.tmp/notebook-preview-tags-restored.jpg` 和 `.tmp/notebook-preview-article-restored.jpg`。本轮只验证预览服务与跳转，没有重复与此故障无关的场景测试。
+
+## Notebook 全量预览与界面修正（2026-11-17 收尾）
+
+- 按用户最新要求从旧博客 `c2bafd1ea099068a8531c1ed53d231ea973df293` 复制全部 21 篇文章；`blog/migration-manifest.json` 留存文件名、标题、导入时 SHA-256、历史 URL 与日期。所有正文及标签/分类元数据逐字节一致，未修改旧站；原有 `.tmp/` 未跟踪项保持原状。
+- 本轮核对旧站与新站的 Hugo 元数据，保留 21 个历史文章路径及发布时间语义。新站 `timeZone` 调整为旧站默认的 UTC，避免将无时区的历史时间重新解释为其他时区；带 `+08:00` 的原文时间仍保留其显式偏移。当前公开构建策略沿用 `buildDrafts: false`、`buildFuture: true`。
+- 必要的 `collapse` 短代码从旧站锁定的 PaperMod 副本复制，移除无效的外层段落包裹；其 MIT 声明留在 `blog/PAPERMOD-LICENSE`。复制旧站长代码渲染钩子，保留超过 50 行的折叠，并补并排图片排版；未复制旧主题整套首页、Git 数据、缓存、部署配置或环境文件。
+- 导航和阅读工具改用英文，文章标题、正文与真实标签/分类值不翻译。移除介绍卡，文章摘要从 150 字缩为约 60 字并限制三行；桌面主题按钮固定右下角，窄屏与站名并排。当前生成 89 个静态页面，涵盖 21 篇文章、25 个标签、4 个分类及按 2026/2025 分组的 21 项归档，不代表 89 篇文章。
+- `npm run blog:build`、11 项 `npm run check`、`npm run lint` 通过。博客检查覆盖全部导入文章及其历史路径、归档、本地目标与目录锚点、代码和两处图片折叠。浏览器核对 1440×900、390×844、320×720，主题按钮的位置/切换、三行摘要、英文导航、标签详情、分类、归档及图片折叠均可用，未观察到整页横向溢出。原文章哈希和日期语义已另外逐条核对。
+- 验证截图为 `.tmp/notebook-all-desktop.jpg`、`.tmp/notebook-all-mobile.jpg`、`.tmp/notebook-all-tags.jpg`、`.tmp/notebook-all-archives.jpg`，保留供本轮交付审阅；预览与检查产物仍在既有 `.tmp/` 目录中，不提交。三维源码未改，本轮未重复三维生产构建；夏季接通、搜索、评论、统一 `dist/`、真机与生产验收仍未完成，未推送或发布。
+
+## 旧博客交互方格恢复（2026-11-16）
+
+- 用户要求替换 Notebook 点阵纸。经旧博客实际 Git 历史核对，`05065bec17d9e318e86c35c3c1fe5aa2205fba01`（2026-08-14）引入 `static/js/starfield.js` 与对应 Canvas/CSS；`6621eaccea25cffa6e0b0815709824e53680ee5a`（2026-09-29）停用挂载但保留文件。新站复制该脚本到 `blog/assets/js/starfield.js` 后适配，不恢复或修改旧站运行状态。
+- 保留原网格密度、鼠标排斥半径、弹簧阻尼、明暗线条颜色与 30fps 上限；将绘图与物理更新分开，以便静态模式也画线。补上空闲主题重绘、隐藏页面暂停、实时运动偏好变化及触屏静态降级；回弹停帧同时考虑速度和离原位的距离，避免在速度接近零的转折点提前停止。
+- Notebook 上游副本仍原样留存；仅站点覆盖层关闭点阵背景、加入不接收事件的固定 Canvas、通过 Hugo 管线加载指纹脚本。新脚本纳入 ESLint，新增 `tests/blog-grid-check.mjs` 验证变形、回弹、空闲无循环、主题、可见性、静态降级、缩放尺寸和 DPR 上限。
+- `npm run check` 的 11 项检查、`npm run lint` 与 `npm run blog:build` 通过。浏览器已确认 1440×900 鼠标附近实际变形、明暗重绘、系统减少动态效果的静态网格及 390×844 的列表/正文，无整页横向溢出；Canvas 为 `pointer-events: none`。截图为 `.tmp/notebook-grid-desktop-{rest,hover}.jpg`、`.tmp/notebook-grid-dark.jpg`、`.tmp/notebook-grid-mobile.jpg` 和 `.tmp/notebook-grid-article-mobile.jpg`。页面隐藏与粗指针等分支的自动检查不等于真机性能验收；未重跑未变动的三维构建，未推送、未发布。
+
+## Notebook 单篇试用（2026-11-16）
+
+- 用户授权试用 Hugo Notebook，仓库为 <https://github.com/its-ammu/hugo-notebook>，锁定提交 `644a3fe82efedcb84c3df6c75c8b2b73b35dbbeb`。MIT 许可证与作者版权保留在 `blog/themes/notebook/LICENSE`，页面保留 Hugo/Notebook 署名。
+- 原样复制主题的 `assets/`、`layouts/`、`hugo.toml`、`theme.toml`、`README.md` 和 `LICENSE`；未复制 Git 元数据、工作流、示例内容或部署配置。站点修改均在 `blog/layouts/` 和 `blog/assets/`，主题副本不改。暂存检出与官方截图在 `.tmp/notebook-upstream/`，不提交、不部署；不再需要时可由用户手动清理。
+- 样文从旧博客复制到 `blog/content/posts/Java序列化与反序列化.md`，两边 SHA-256 均为 `926997520750b1efaef4d792201e00fbe297d122aebbea0ae2d90a4c432e79ea`。旧渲染钩子 `layouts/_markup/render-image.html` 复制后加原图链接，复用远程图片尺寸读取与失败降级；原站源码及未跟踪项保持原状。
+- 历史路径 `/posts/java序列化与反序列化/` 保留。当前博客独立根目录预览，尚未确定最终列表与资源命名空间，未合并场景或发布配置。构建仅读取本项目 `blog/`，图片仍由原文的远程图床提供，不加载 Three.js、Lenis、模型或场景加载层。
+- 本轮环境为 Hugo extended `0.161.1`、Node `24.15.0`。`npm run blog:build` 通过，输出 16 个静态页面（含标签、分类等生成页，并非 16 篇文章）；九项既有场景检查、新增博客链接/锚点/资源输出检查及 lint 通过。
+- 用普通 Python 静态服务器直接托管 `.tmp/notebook-preview/`。浏览器核对了 1440×900 桌面、390×844 和 320×720 窄屏；正文五个章节和九个代码块完整，目录跳转、明暗切换、键盘跳过导航生效，长代码只在块内横向滚动，未观察到整页横向溢出。原图实际加载为 1066×51，提供查看原图链接；检查时未见页面控制台警告或错误。窄屏模拟不等于真机触摸验收。
+- 截图为 `.tmp/notebook-{home,article}-desktop.jpg`、`.tmp/notebook-{home,article,code,image}-mobile.jpg` 和 `.tmp/notebook-code-{desktop,dark}.jpg`；预览构建与回归检查输出分别为 `.tmp/notebook-preview/`、`.tmp/notebook-test/`，资源缓存为 `.tmp/notebook-resources/`。这些内容可重建，不提交。
+- 当前只验证 Notebook 候选主题；搜索、归档、评论、全量迁移、夏季入口、返回场景与统一 `dist/` 待实施，主题美术选择仍待用户确认。未推送、未发布，本轮未重跑未改动的三维生产构建。
+
 ## 来源
 
 - 仓库：<https://github.com/andrewwoan/aimee-xus-papercraft-world>
@@ -279,3 +349,25 @@
 - 用户选择贝壳纸风铃并授权按构图添加。沿用夏季生成器的纸片几何和纸纹，只增 23 个低密度分件，三片扇贝及横杆/细线共用从原天花板实际射线取得的吊点。运行层只增加一个 `AnimateMesh`，原六处动画与路线不变，没有新依赖、纹理文件、灯光、音效或交互。
 - 当前 `summer-blog.glb` 为 69 网格、555,972 字节，比上一版增加 22,000 字节。生成自检与模型检查核对吊点、共用枢轴、悬吊高度、三片贝壳及原素材哈希；八项检查、lint、构建及六个产物一致性通过。原主包体积提醒仍在。
 - 运行采样 4 秒/480 帧确认吊点固定，轻摆转角约 `-0.025～0.025` 弧度；四入口标题/说明在既有沿途视角的中心射线均无遮挡。桌面和 390px 窄屏截图与记录见 `DESIGN.md`，增量视觉复核为 `ship`。仅为本地验证，未复测真机或发布。
+
+## 博客与夏季四入口统一接入（2026-11-18 至 2026-11-19）
+
+- 沿用已锁定 Notebook、原纸卡与树木横幅，不新增依赖或覆盖原博客。Tags/Categories 标签和 Archives 纸页统一 10px 圆角，三个总览加入同一四季横幅。
+- 夏季四模块保持原位，通过真实 `/posts/`、`/tags/`、`/categories/`、`/archives/` 链接进入内容；纸卡射线点击与原生 HTML 链接并存。HTML 命中区域考虑相机轻微视差，按下后捕获指针，画外/相机背面链接退出 Tab 顺序。
+- 路线进度与缩放保存在当前页签 sessionStorage，仅有效返回参数或历史条目标记触发恢复；全新访问仍从春季开始，返回需等模型与场景就绪。正文不加载三维、Lenis 或场景加载层。
+- Vite 与 Hugo 各自构建到新的 .tmp 目录，校验所有路径冲突后输出统一 dist，场景拥有根首页，Hugo 资源使用 `/blog-assets/`；旧首页分页转到 Articles 分页。旧 dist 作为暂存备份保留，不批量删除。
+- `npm run check` 13 项、`npm run lint`、统一 `npm run build` 通过；沿用原有 Vite 主包体积提醒。普通 Python 静态服务器检查 29 条真实路由和资源，缺页返回 404。桌面四入口、返回箭头、浏览器后退、缩放恢复和首次继续滚动均做运行检查。390px 下验证了可见纸卡焦点，截图 `.tmp/blog-scene-mobile-focus.png`；栏目截图 `.tmp/blog-connected-tags-desktop.jpg`、`.tmp/blog-connected-tags-mobile.jpg`、`.tmp/blog-connected-mobile.jpg`。
+- 仍未接入搜索/评论，也未执行真机、低性能设备或生产配置/发布；本轮停止在博客接入边界。
+
+## 栏目横幅连续播放（2026-11-19）
+
+用户要求四个栏目切换时横幅不重置。复用现有素材与 CSS 动画，通过页签 sessionStorage 保存 41 条动画的时钟和暂停状态；首绘以数值 CSS 变量恢复季节，主脚本恢复局部时钟，BFCache 返回时重读最新栏目状态。每季改为 14 秒停留、1.5 秒叠换，一轮 62 秒。两项相关自动检查、lint 与统一构建通过；静态服务器浏览器验证栏目之间的暂停/播放延续、浏览器历史采用最新季节与暂停状态，记录 `.tmp/banner-continuity-check.json`。未做新一轮真机或生产验证。
+
+## 夏季入口悬停抖动修复（2026-11-19）
+
+- HTML 入口的 pointermove 冒泡到 R3F 后，默认 offsetX/Y 随目标从画布切到链接内部坐标，引起相机偏转与入口移动；原实现实测只微移光标就出现约 24px 横向变化。固定全屏 Canvas 改用现有 `eventPrefix="client"`，统一视口坐标；不关闭视角跟随，也不改变场景摆位和入口。
+- `npm run check` 13 项、lint 与统一构建通过。相同视口点在链接/画布目标间切换的位移小于 0.002px；四入口真实悬停稳定后的波动均小于 0.3px，点击、返回正常。证据 `.tmp/hover-jitter-{before,after,check}.json`，实景 `.tmp/summer-hover-fixed.png`。未复测真机或发布服务器。
+
+## 提交前核对（2026-11-19）
+
+13 项自动检查与 lint 重新通过，统一构建及实际点击/返回/悬停验证沿用本轮最新结果。全部 21 篇导入文章在工作区和 Git 暂存区均与迁移清单的 SHA-256 一致；`.gitattributes` 对原文关闭文本归一化，保留原有 LF/CRLF 与 Markdown 换行空格，不修改文章正文。提交范围不含 dist、.tmp、本机工具记录或环境配置，原博客未修改。

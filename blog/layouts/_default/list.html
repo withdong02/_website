@@ -1,0 +1,14 @@
+{{ define "main" }}
+<section class="list-page">
+  <h1 class="list-title">{{ .Title }}</h1>
+  {{ with .Content }}<div class="ruled list-desc">{{ . }}</div>{{ end }}
+  {{ $pager := .Paginate .Pages }}
+  {{ if and (eq .Section "posts") (eq .Kind "section") (eq $pager.PageNumber 1) }}{{ partial "echo-drift.html" . }}{{ end }}
+  <div class="card-grid" id="articles">
+    {{ range $pager.Pages }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </div>
+  {{ partial "pagination.html" $pager }}
+</section>
+{{ end }}

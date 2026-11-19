@@ -1,6 +1,6 @@
 # 四季纸艺个人网站
 
-基于 Aimee Xu's Papercraft World 改造的个人网站，使用 React、React Three Fiber、Three.js 和 GSAP；计划接入 Hugo 博客、相册和音乐，最终输出静态 `dist/`，部署到自己的服务器。
+基于 Aimee Xu's Papercraft World 改造的个人网站，使用 React、React Three Fiber、Three.js 和 GSAP；已接通 Hugo 博客，后续接入相册和音乐，最终输出静态 `dist/`，部署到自己的服务器。
 
 ## 文档分工
 
@@ -21,10 +21,13 @@
 # 新检出的项目首次安装，沿用锁文件
 npm ci
 
-# 本地开发预览，仅监听本机
+# 终端一：博客后台，供 Vite 代理
+npm run blog:dev
+
+# 终端二：统一预览，打开 http://127.0.0.1:5173/
 npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
-# 全部七项检查：资源、路线、角色、金秋、春季介绍/回声/蝴蝶
+# 自动检查：场景资源、路线、角色与独立博客样文（需要 Hugo）
 npm run check
 
 # 检查现役源码、工具与检查脚本
@@ -34,7 +37,45 @@ npm run lint
 npm run build
 ```
 
-重复验证构建时可用 `npm run build -- --emptyOutDir=false` 避免清空已有产物；发布前另用新的空输出目录构建并核对文件清单，避免夹带历史产物。
+## Notebook 博客预览
+
+文章列表每页 10 篇，底部可按页码或 Previous / Next 换页；标签与分类内的文章列表使用同样规则，Archives 保持完整归档。分页大小由 `blog/hugo.yml` 的 `pagination.pagerSize` 控制。
+
+Articles 第一页、Tags、Categories、Archives 总览上方展示“一棵树的四季”，桌面 170px、手机 130px；树在左、长椅在右，花瓣、纸浪、落叶与细雪每季停留 14 秒，再用 1.5 秒叠换，一轮 62 秒。四个栏目切换时延续横幅季节、局部动画和暂停状态，不重新从春季开始。右上角可暂停，离屏停止运动，减少动态效果时保留静态春景。透明树木/长椅图集在 `blog/assets/images/season-{tree,bench}-atlas.png`，Hugo 自动转为 WebP，文字和飘落物分开渲染。后续分页与正文不显示横幅，文章阅读不依赖三维资源。
+
+在项目根目录运行，需要 Hugo extended；本轮验证版本为 `0.161.1`。主题已随项目固定保存，无需下载主题或访问旧博客目录：
+
+```powershell
+# 生成独立博客静态产物到 .tmp/notebook-preview/
+npm run blog:build
+
+# 普通静态服务，打开 http://127.0.0.1:1313/
+python -m http.server 1313 --bind 127.0.0.1 --directory .tmp/notebook-preview
+```
+
+开发联调时关闭上述静态服务，在两个终端分别运行 `npm run blog:dev` 与 `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort`。统一从 `http://127.0.0.1:5173/` 访问，1313 仅作为 Hugo 后台；Vite 将博客路由与 `/blog-assets/` 代理给 Hugo。服务仅绑定本机；停止服务使用 `Ctrl+C`。博客源码在 `blog/`，已导入旧站全部 21 篇文章、25 个标签和 4 个分类，提供 Articles、Tags、Categories、Archives 四个入口。新增或编辑文章直接修改 `blog/content/posts/`，不需要改三维源码；`blog/migration-manifest.json` 仅保留导入时的版本、哈希、日期与路径快照。
+
+预览服务必须保持运行：已加载的首页可以留在浏览器里，但服务停止后新页面和刷新都会连接失败。Windows 中需要独立后台预览时，可在项目根目录运行以下命令；先确认 1313 没有被已有预览占用，日志写入 `.tmp/`：
+
+```powershell
+Start-Process -FilePath (Get-Command hugo).Source `
+  -ArgumentList 'server --source blog --noBuildLock --bind 127.0.0.1 --port 1313 --disableFastRender --baseURL http://127.0.0.1:5173/ --appendPort=false' `
+  -WorkingDirectory (Get-Location).Path -WindowStyle Hidden `
+  -RedirectStandardOutput '.tmp/notebook-dev.stdout.log' `
+  -RedirectStandardError '.tmp/notebook-dev.stderr.log'
+```
+
+原文与外部图片地址保留，图床不可达时可能影响图片加载，构建中的图片尺寸读取失败会告警并降级。`tests/blog-preview-check.mjs` 验证全量文章可发现性、历史路径、归档、本地链接、目录锚点及代码/折叠图片输出，产物为 `.tmp/notebook-test/`。
+
+当前背景已按用户要求从点阵纸改为旧博客的鼠标排斥/回弹方格，脚本位于 `blog/assets/js/starfield.js`；触屏或减少动态效果下显示静态方格，主题与尺寸变化仍重绘，来源见 `UPSTREAM.md`。
+
+夏季四张纸卡分别进入 `/posts/`、`/tags/`、`/categories/`、`/archives/`，支持纸卡点击和原生链接键盘操作。博客右上角的返回箭头与浏览器后退恢复路线位置和缩放；新访问根路径仍从春季开始。状态仅存当前标签页的 sessionStorage，存储被禁用时仍可跳转，但不恢复位置。
+
+`npm run build` 先将 Vite 与 Hugo 构建到新的 `.tmp/site-build-*/`，校验冲突后合并成 `dist/`。场景占 `/index.html`，Hugo 保留文章与分类等历史路径、404、RSS 和 sitemap，资源集中于 `/blog-assets/`；旧首页 `/page/N/` 转到 `/posts/page/N/`。旧 `dist/` 留存在对应暂存目录的 `previous-dist/`，不批量删除。用 `python -m http.server 4173 --bind 127.0.0.1 --directory dist` 验证独立静态包；静态托管应按真实文件返回，不能用场景首页兜底博客深链接。页面目前保留 `noindex`，搜索、评论、生产配置和发布仍未完成。
+
+## 场景资源重建与检查说明
+
+统一构建每次使用新的暂存目录，保留之前的输出备份；无需传 `--emptyOutDir=false`。`.tmp/` 中的历史构建与检查产物可在验收后由用户清理。
 
 角色各阶段检查已合并到 `tests/character-integrity-check.mjs`，统一验证四季六版角色的几何、面部遮挡、动作枢轴、眨眼和原素材保留。其余检查各自保护独立的资源或场景约束，不参与网页打包。保留的上游原秋季 JSX、第三方静态文件和本地临时目录不纳入 ESLint；新源码和检查脚本仍完整检查。
 
@@ -68,7 +109,7 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 
 输出 `public/models/spring-introduction.glb`、`public/textures/spring-introduction.webp` 和 `public/textures/spring-introduction-text.webp`。修改文案时同步核对 `DESIGN.md`、生成脚本和介绍检查；原介绍同时包含字形和烘焙字痕，不能只改字形后保留旧字痕。
 
-春季回声复用复制到 `public/images/spring-echo.svg` 的旧博客原轮廓与双眼，生成独立湖蓝纸片和纸纹图集；只在美术重建时运行，依赖同上，不需要访问旧博客目录：
+春季回声复用 `public/images/spring-echo.svg` 的原轮廓及当前胶囊双眼，生成独立湖蓝纸片和纸纹图集，并同步博客横幅的 `blog/assets/images/echo.svg`；只在美术重建时运行，依赖同上，不需要访问旧博客目录：
 
 ```powershell
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-spring-echo.py
@@ -90,7 +131,7 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/build-summer-blog.py
 ```
 
-输出 `public/models/summer-blog.glb`、`public/textures/summer-blog-1.webp`、`summer-blog-2.webp`、`summer-blog-3.webp`、`summer-blog-paper.webp` 和 `summer-blog-text.webp`；第四张夏季图集、角色资产、原场景组件及全部上游源文件保留。修改简介或模块文案时同步 `DESIGN.md`、生成脚本与 `tests/summer-blog-check.mjs`。当前四个模块仅为场景素材，真实页面跳转在博客接入阶段实现。
+输出 `public/models/summer-blog.glb`、`public/textures/summer-blog-1.webp`、`summer-blog-2.webp`、`summer-blog-3.webp`、`summer-blog-paper.webp` 和 `summer-blog-text.webp`；第四张夏季图集、角色资产、原场景组件及全部上游源文件保留。修改简介或模块文案时同步 `DESIGN.md`、生成脚本与 `tests/summer-blog-check.mjs`。当前四个模块已分别接通四个博客页面，交互挂载在 `summer-blog.jsx`，不重新生成模型。
 
 ## 静态产物预览与部署
 

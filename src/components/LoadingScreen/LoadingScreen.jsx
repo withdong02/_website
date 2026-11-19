@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import "./LoadingScreen.css";
 import { useExperienceStore } from "../../store/useExperienceStore";
+import { sceneReturn } from "../../Experience/utils/blog-navigation.js";
 
 const LoadingScreen = () => {
   const { progress, active } = useProgress();
@@ -16,6 +17,8 @@ const LoadingScreen = () => {
     (state) => state.setIsExperienceReady,
   );
   const isSceneReady = useExperienceStore((state) => state.isSceneReady);
+  const isLoaded = maxProgress === 100 && isSceneReady;
+  const open = revealed || (Boolean(sceneReturn) && isLoaded);
 
   const tlRef = useRef(null);
   const trRef = useRef(null);
@@ -28,7 +31,7 @@ const LoadingScreen = () => {
   }
 
   useGSAP(() => {
-    if (!revealed) return;
+    if (!open) return;
 
     setIsExperienceReady(true);
 
@@ -59,10 +62,9 @@ const LoadingScreen = () => {
         setGone(true);
       },
     });
-  }, [revealed]);
+  }, [open]);
 
   // Assets finished downloading AND the scene has mounted/compiled
-  const isLoaded = maxProgress === 100 && isSceneReady;
 
   if (gone) return null;
 
@@ -74,7 +76,7 @@ const LoadingScreen = () => {
         <div ref={blRef} className="quadrant quadrant--bl" />
         <div ref={brRef} className="quadrant quadrant--br" />
 
-        {!revealed && (
+        {!open && (
           <>
             <div ref={loadingRef} className="loading-bar-container">
               <div

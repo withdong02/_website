@@ -10,6 +10,7 @@ import gsap from "gsap";
 import { useCurveProgressStore } from "../store/useCurveProgressStore";
 import { useGSAP } from "@gsap/react";
 import { useExperienceStore } from "../store/useExperienceStore";
+import { sceneReturn, startProgress } from "./utils/blog-navigation.js";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -31,8 +32,8 @@ const Experience = () => {
 
     if (isExperienceReady && !isInfoPanelOpen) {
       if (!hasStarted.current) {
-        // Discard browser-restored scrolling before the first scene interaction.
-        lenisInstance.scrollTo(0, { immediate: true, force: true });
+        const progress = sceneReturn ? (sceneReturn.progress - startProgress + 1) % 1 : 0;
+        lenisInstance.scrollTo(progress * lenisInstance.limit, { immediate: true, force: true });
         hasStarted.current = true;
       }
       lenisInstance.start();
@@ -51,6 +52,7 @@ const Experience = () => {
     gsap.ticker.add(update);
 
     const syncScroll = (e) => {
+      if (!hasStarted.current) return;
       ScrollTrigger.update();
       setScrollProgress(e.progress);
     };
@@ -76,6 +78,8 @@ const Experience = () => {
       >
         <Canvas
           id="canvas-container"
+          // HTML links bubble pointer events with their own local offsets.
+          eventPrefix="client"
           style={{
             position: "fixed",
             top: 0,

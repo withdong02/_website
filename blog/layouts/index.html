@@ -1,0 +1,13 @@
+{{ define "main" }}
+<section class="posts" aria-labelledby="latest-posts">
+  <h1 class="list-title" id="latest-posts">Articles</h1>
+  {{ $pager := .Paginate (where .Site.RegularPages "Type" "posts") }}
+  {{ if eq $pager.PageNumber 1 }}{{ partial "echo-drift.html" . }}{{ end }}
+  <div class="card-grid" id="articles">
+    {{ range $pager.Pages }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </div>
+  {{ partial "pagination.html" $pager }}
+</section>
+{{ end }}

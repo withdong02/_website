@@ -1,0 +1,14 @@
+<aside class="rail">
+  <a class="brand" href="{{ "/posts/" | relLangURL }}">{{ .Site.Title }}</a>
+  <a class="back-to-scene" href="/?resume=blog" aria-label="Back to scene" title="Back to scene"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5-6 6 6 6M3 11h12a6 6 0 0 1 6 6v2"/></svg></a>
+  {{ $cur := .RelPermalink }}
+  <nav class="spine-nav" aria-label="Blog navigation" lang="en">
+    {{ range .Site.Menus.main }}
+      {{ $active := and (not .Params.external) (or (and $.IsHome (eq .Identifier "posts")) (hasPrefix $cur (.URL | relLangURL))) }}
+      <a class="spine-link{{ if $active }} is-active{{ end }}" href="{{ .URL }}"{{ if .Params.external }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}{{ if .Params.external }}{{ partial "icon.html" "external" }}{{ end }}</a>
+    {{ end }}
+  </nav>
+  <button class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+    {{ partial "icon.html" "moon" }}{{ partial "icon.html" "sun" }}
+  </button>
+</aside>

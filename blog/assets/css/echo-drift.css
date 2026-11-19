@@ -1,0 +1,100 @@
+/* Approved cut-paper tree and bench; 14 seconds per season plus 1.5-second crossfades. */
+.echo-drift {
+  --ground-level: 20px;
+  --tree-size: 160px;
+  --bench-width: 128px;
+  position: relative;
+  height: 170px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 10px;
+  background-color: var(--card);
+  background-image: linear-gradient(var(--paper-wash), var(--paper-wash)), var(--paper-texture);
+  background-size: 256px;
+  background-blend-mode: normal, multiply;
+}
+.echo-drift-art { position: absolute; inset: 0; overflow: hidden; }
+.echo-season-defs { position: absolute; }
+.echo-season { position: absolute; inset: 0; opacity: 0; background: var(--sky); animation: season-window 62s linear infinite; animation-delay: calc(var(--season-offset, 0s) - var(--season-elapsed, 0ms)); }
+.echo-season::before { content: ""; position: absolute; inset: 0; background: var(--paper-texture) 0 0 / 256px; mix-blend-mode: multiply; opacity: .15; }
+.echo-season--spring { --sky: #f5f1e7; --far: #d7e0c4; --near: #b8ce93; --sprite-x: 0%; --sprite-y: 0%; opacity: 1; }
+.echo-season--summer { --sky: #e8eff0; --far: #b5cfd1; --near: #b3c78d; --sprite-x: 100%; --sprite-y: 0%; --season-offset: -46.5s; }
+.echo-season--autumn { --sky: #f5eddd; --far: #e4ce9e; --near: #d7b36d; --sprite-x: 0%; --sprite-y: 100%; --season-offset: -31s; }
+.echo-season--winter { --sky: #f7f8f4; --far: #e7eae5; --near: #fffef9; --sprite-x: 100%; --sprite-y: 100%; --season-offset: -15.5s; }
+:root[data-theme="dark"] .echo-season--spring { --sky: #233b35; --far: #385144; --near: #49644c; }
+:root[data-theme="dark"] .echo-season--summer { --sky: #213e4b; --far: #416672; --near: #456348; }
+:root[data-theme="dark"] .echo-season--autumn { --sky: #403a2e; --far: #66543a; --near: #8a6e44; }
+:root[data-theme="dark"] .echo-season--winter { --sky: #39464b; --far: #7b898d; --near: #edf1ec; }
+.echo-season-name { position: absolute; left: 20px; top: 14px; z-index: 5; color: var(--ink-soft); font-family: "Slime Box", var(--font); font-size: 18px; }
+.echo-season-ground { position: absolute; left: -4%; bottom: -12px; width: 108%; filter: drop-shadow(0 -2px 2px #173d5510); }
+.echo-season-ground--far { height: 108px; color: var(--far); z-index: 0; }
+.echo-season-ground--near { height: 63px; color: var(--near); z-index: 2; }
+.echo-season-water { position: absolute; left: -4%; bottom: 24px; width: 108%; height: 52px; z-index: 1; color: #6ca9bc; animation: wave-back 9s ease-in-out infinite alternate; }
+:root[data-theme="dark"] .echo-season-water { color: #397387; }
+.season-tree, .season-bench { position: absolute; z-index: 3; background-repeat: no-repeat; background-size: 200% 200%; background-position: var(--sprite-x) var(--sprite-y); }
+/* Measured atlas anchors: tree roots at 93%, bench feet at 87.5% of each cell. */
+.season-tree { width: calc(var(--tree-size) * var(--tree-aspect)); height: var(--tree-size); left: calc(33% - var(--tree-size) * var(--tree-aspect) / 2); bottom: calc(var(--ground-level) - var(--tree-size) * .07); background-image: var(--tree-atlas); transform-origin: 50% 93%; animation: tree-breeze 6s ease-in-out infinite alternate; }
+.season-bench { width: var(--bench-width); height: calc(var(--bench-width) / var(--bench-aspect)); left: calc(55% - var(--bench-width) / 2); bottom: calc(var(--ground-level) - var(--bench-width) / var(--bench-aspect) * .125); background-image: var(--bench-atlas); }
+:root[data-theme="dark"] .season-tree, :root[data-theme="dark"] .season-bench { filter: brightness(.82) saturate(.85); }
+.echo-season-particles { position: absolute; inset: 0; z-index: 4; }
+.echo-season-particle { position: absolute; left: var(--x); top: -30px; width: 13px; height: 18px; animation: paper-fall 9.5s linear infinite; animation-delay: var(--delay); color: #d9a6b3; filter: drop-shadow(1px 2px 1px #173d5514); }
+.echo-season-particle:nth-child(1) { --x: 12%; --delay: -1.5s; --turn: 110deg; }
+.echo-season-particle:nth-child(2) { --x: 29%; --delay: -5s; --turn: -140deg; }
+.echo-season-particle:nth-child(3) { --x: 63%; --delay: -3s; --turn: 160deg; }
+.echo-season-particle:nth-child(4) { --x: 78%; --delay: -7s; --turn: -110deg; }
+.echo-season-particle:nth-child(5) { --x: 87%; --delay: -.5s; --turn: 180deg; }
+.echo-season-particle:nth-child(6) { --x: 44%; --delay: -6s; --turn: 80deg; }
+.echo-season-particle:nth-child(7) { --x: 52%; --delay: -8s; --turn: -90deg; }
+.echo-season-particle:nth-child(8) { --x: 21%; --delay: -4s; --turn: 130deg; }
+.echo-season-particle:nth-child(9) { --x: 69%; --delay: -2.4s; --turn: -130deg; }
+.echo-season-particle:nth-child(10) { --x: 36%; --delay: -.8s; --turn: 160deg; }
+.echo-season-particle:nth-child(11) { --x: 82%; --delay: -6.8s; --turn: 90deg; }
+.echo-season-particle:nth-child(12) { --x: 6%; --delay: -8.7s; --turn: -140deg; }
+.echo-season-particle--leaf { width: 18px; height: 22px; color: #c9904f; animation-name: leaf-fall; }
+.echo-season-particle--leaf:nth-child(2) { color: #aa6f46; }
+.echo-season-particle--leaf:nth-child(3) { color: #dfb660; }
+.echo-season--summer .echo-season-particle--leaf { color: #8ca65e; }
+.echo-season-particle--snow { width: 10px; height: 10px; color: #fff; filter: drop-shadow(0 1px 1px #819aa54d); animation-name: snow-fall; }
+.echo-season-scatter { position: absolute; inset: 0; z-index: 4; }
+.echo-season-grounded { position: absolute; width: 14px; height: 18px; left: var(--land-x); bottom: var(--land-y); color: #cf9950; transform: rotate(var(--land-turn)) scaleY(.5); }
+.echo-season-grounded--petal { width: 11px; height: 15px; color: #deaeb9; }
+.echo-season-grounded:nth-child(1) { --land-x: 24%; --land-y: 15px; --land-turn: 55deg; }
+.echo-season-grounded:nth-child(2) { --land-x: 28%; --land-y: 24px; --land-turn: -40deg; }
+.echo-season-grounded:nth-child(3) { --land-x: 38%; --land-y: 15px; --land-turn: 70deg; }
+.echo-season-grounded:nth-child(4) { --land-x: 44%; --land-y: 23px; --land-turn: -65deg; }
+.echo-season-grounded:nth-child(5) { --land-x: 49%; --land-y: 13px; --land-turn: 35deg; }
+.echo-season-grounded:nth-child(6) { --land-x: 20%; --land-y: 22px; --land-turn: -25deg; }
+.echo-season-grounded:nth-child(7) { --land-x: 59%; --land-y: 19px; --land-turn: 50deg; }
+.echo-season-grounded:nth-child(8) { --land-x: 64%; --land-y: 13px; --land-turn: -35deg; }
+.echo-season-grounded:nth-child(9) { --land-x: 35%; --land-y: 13px; --land-turn: 60deg; }
+.echo-season-grounded:nth-child(10) { --land-x: 41%; --land-y: 14px; --land-turn: -55deg; }
+.echo-drift-toggle { position: absolute; right: 4px; top: 4px; z-index: 5; width: 44px; height: 44px; padding: 0; border: 0; background: none; color: var(--ink-soft); cursor: pointer; }
+.echo-drift-toggle .icon { width: 16px; height: 16px; }
+.echo-drift-play, .echo-drift[data-paused="true"] .echo-drift-pause { display: none; }
+.echo-drift[data-paused="true"] .echo-drift-play { display: inline; }
+.echo-drift *, .echo-drift[data-running="false"] * { animation-play-state: paused; }
+.echo-drift[data-running="true"] * { animation-play-state: running; }
+@keyframes tree-breeze { from { transform: rotate(-.35deg); } to { transform: rotate(.55deg); } }
+@keyframes season-window { 0%, 22.580645%, 100% { opacity: 1; transform: translateY(0); } 25%, 97.580645% { opacity: 0; transform: translateY(3px); } }
+@keyframes paper-fall { from { transform: translate(-18px, -8px) rotate(-25deg); } to { transform: translate(42px, 210px) rotate(var(--turn)); } }
+@keyframes leaf-fall { from { transform: translate(30px, -8px) rotate(-35deg); } 50% { transform: translate(-10px, 95px) rotate(85deg); } to { transform: translate(15px, 210px) rotate(var(--turn)); } }
+@keyframes snow-fall { from { transform: translate(-8px, -8px); } to { transform: translate(14px, 210px) rotate(55deg); } }
+@keyframes wave-back { to { transform: translateX(2%) translateY(2px); } }
+@media (max-width: 600px) {
+  .echo-drift { height: 130px; --ground-level: 16px; --tree-size: 124px; --bench-width: 100px; }
+  .echo-season-ground--far { height: 83px; }
+  .echo-season-ground--near { height: 49px; }
+  .echo-season-water { bottom: 17px; height: 40px; }
+  .echo-season-name { left: 14px; top: 10px; font-size: 16px; }
+  .echo-season-particle:nth-child(n+7), .echo-season-grounded:nth-child(n+7) { display: none; }
+  .echo-season--winter .echo-season-particle:nth-child(7) { display: block; }
+  .echo-season-particle--leaf { width: 14px; height: 18px; }
+  .echo-season-particle--petal { width: 10px; height: 14px; }
+  .echo-season-particle--snow { width: 8px; height: 8px; }
+  .echo-season-grounded { width: 11px; height: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .echo-drift * { animation: none !important; }
+  .echo-drift-toggle { display: none; }
+}

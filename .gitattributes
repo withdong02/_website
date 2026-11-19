@@ -1,0 +1,2 @@
+# Keep imported article bytes consistent with the migration manifest on every platform.
+/blog/content/posts/*.md -text

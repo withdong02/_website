@@ -4,6 +4,7 @@ import { useCameraStore } from "../../store/useCameraStore";
 
 const ZoomSlider = () => {
   const setZoom = useCameraStore((state) => state.setZoom);
+  const zoom = useCameraStore((state) => state.zoom);
 
   const handleChange = (e) => {
     setZoom(parseFloat(e.target.value));
@@ -30,7 +31,7 @@ const ZoomSlider = () => {
         min={1}
         max={3}
         step={0.01}
-        defaultValue={1}
+        value={zoom}
         onChange={handleChange}
       />
 

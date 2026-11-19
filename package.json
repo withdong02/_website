@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "node scripts/build-site.mjs",
+    "blog:build": "hugo --source blog --noBuildLock",
+    "blog:dev": "hugo server --source blog --noBuildLock --bind 127.0.0.1 --port 1313 --disableFastRender --baseURL http://127.0.0.1:5173/ --appendPort=false",
     "lint": "eslint .",
     "check": "node --test tests/*-check.mjs",
     "preview": "vite preview"

@@ -1,0 +1,19 @@
+{{ define "main" }}
+{{ partial "echo-drift.html" . }}
+<section class="archives">
+  <h1 class="list-title">{{ .Title }}</h1>
+  {{ range (where .Site.RegularPages "Type" "posts").GroupByDate "2006" }}
+  <section class="archive-year">
+    <h2>{{ .Key }} <span class="archive-count">{{ len .Pages }}</span></h2>
+    <ul class="archive-list">
+      {{ range .Pages }}
+      <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+</section>
+{{ end }}

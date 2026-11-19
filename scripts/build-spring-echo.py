@@ -16,7 +16,7 @@ atlas = ROOT / "public/textures/Scene_2_Spring_1.webp"
 originals = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in (source, atlas)}
 svg = ET.parse(ROOT / "public/images/spring-echo.svg").getroot()
 path = svg.find("{*}path")
-eyes = svg.findall("{*}circle")
+eyes = svg.findall("{*}rect")
 assert len(eyes) == 2
 tokens = re.findall(r"[A-Za-z]|-?\d+(?:\.\d+)?", path.attrib["d"])
 assert tokens[:1] == ["M"] and tokens[-1] == "Z"
@@ -79,10 +79,12 @@ def paper(name, contour, front, color, tile):
 
 paper("spring-echo-body",outline,depth,path.attrib["fill"],0)
 for index,eye in enumerate(eyes):
-    x,y,r = (float(eye.attrib[k]) for k in ("cx","cy","r"))
-    circle = [(x+r*math.cos(t*math.tau/48),y+r*math.sin(t*math.tau/48)) for t in range(48)]
-    obj = paper("spring-echo-eye-"+str(index+1),circle,depth+.022,eye.attrib["fill"],1)
-    obj["source_eye"] = [x,y,r]
+    x,y,w,h,r = (float(eye.attrib[k]) for k in ("x","y","width","height","rx"))
+    assert w == 2*r and h > w, "Eyes must remain vertical capsules"
+    capsule = [(x+r+r*math.cos(math.pi+t*math.pi/24),y+r+r*math.sin(math.pi+t*math.pi/24)) for t in range(25)]
+    capsule += [(x+r+r*math.cos(t*math.pi/24),y+h-r+r*math.sin(t*math.pi/24)) for t in range(25)]
+    obj = paper("spring-echo-eye-"+str(index+1),capsule,depth+.022,eye.attrib["fill"],1)
+    obj["source_eye"] = [x,y,w,h,r]
 
 texture = ROOT / "public/textures/spring-echo.webp"
 subprocess.run([shutil.which("python"),"-c",r'''
@@ -108,5 +110,6 @@ bpy.ops.export_scene.gltf(filepath=str(output),export_format="GLB",use_selection
 for p,expected in originals.items():
     assert hashlib.sha256(p.read_bytes()).hexdigest() == expected, f"Original changed: {p}"
 assert len(created)==3 and output.stat().st_size<100000
+shutil.copyfile(ROOT / "public/images/spring-echo.svg", ROOT / "blog/assets/images/echo.svg")
 print(json.dumps({"meshes":3,"model_bytes":output.stat().st_size,"texture_bytes":texture.stat().st_size,
     "body_color":path.attrib["fill"],"originals_unchanged":True}))

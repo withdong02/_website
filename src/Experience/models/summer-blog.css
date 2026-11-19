@@ -1,0 +1,3 @@
+/* Allow for the camera's small pointer parallax between press and release. */
+.summer-blog-link { display: block; width: 64px; height: 64px; border-radius: 6px; }
+.summer-blog-link:focus-visible { outline: 3px solid #fff5df; outline-offset: 4px; background: #173d5580; }

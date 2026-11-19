@@ -12,7 +12,7 @@ export default defineConfig([
     'src/Experience/models/Scene_4_Fall.jsx',
   ]),
   {
-    files: ['src/**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}', 'blog/assets/js/**/*.js'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -32,7 +32,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['scripts/**/*.js', 'tests/**/*.mjs', '*.config.js'],
+    files: ['scripts/**/*.{js,mjs}', 'tests/**/*.mjs', '*.config.js'],
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },
   },

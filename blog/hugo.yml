@@ -1,0 +1,55 @@
+baseURL: "http://127.0.0.1:1313/"
+title: withdong02
+theme: notebook
+locale: zh-CN
+defaultContentLanguage: zh
+hasCJKLanguage: true
+timeZone: UTC
+buildDrafts: false
+buildFuture: true
+summaryLength: 60
+pagination:
+  pagerSize: 10
+publishDir: ../.tmp/notebook-preview
+resourceDir: ../.tmp/notebook-resources
+caches:
+  getresource:
+    dir: :resourceDir/_gen
+
+params:
+  author: withdong02
+  favicon: images/echo-favicon.png
+  description: 记录学习中的笔记、实验与项目。
+  defaultTheme: light
+  ShowReadingTime: true
+  DateFormat: "2006-01-02"
+
+menu:
+  main:
+    - identifier: posts
+      name: Articles
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
+    - identifier: categories
+      name: Categories
+      url: /categories/
+      weight: 30
+    - identifier: archives
+      name: Archives
+      url: /archives/
+      weight: 40
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: true
+    style: github-dark
+  tableOfContents:
+    startLevel: 2
+    endLevel: 3

@@ -1,0 +1,10 @@
+{{ if gt .TotalPages 1 }}
+<nav class="pagination" aria-label="Pagination" lang="en">
+  {{ with .Prev }}<a aria-label="Previous" href="{{ .URL }}#articles" rel="prev"><svg class="pagination-arrow icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span class="pagination-label">Previous</span></a>{{ end }}
+  {{ $current := .PageNumber }}
+  {{ range .Pagers }}
+    <a href="{{ .URL }}#articles" aria-label="Page {{ .PageNumber }}"{{ if eq .PageNumber $current }} aria-current="page"{{ end }}>{{ .PageNumber }}</a>
+  {{ end }}
+  {{ with .Next }}<a aria-label="Next" href="{{ .URL }}#articles" rel="next"><span class="pagination-label">Next</span><svg class="pagination-arrow icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>{{ end }}
+</nav>
+{{ end }}

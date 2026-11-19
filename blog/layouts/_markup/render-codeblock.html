@@ -1,0 +1,11 @@
+{{- $code := strings.TrimSuffix "\n" .Inner -}}
+{{- $lineCount := len (strings.Split $code "\n") -}}
+{{- $highlighted := transform.HighlightCodeBlock . -}}
+{{- if gt $lineCount 50 }}
+<details class="code-collapse">
+  <summary>{{ .Type | default "Code" }} · {{ $lineCount }} lines · Show code</summary>
+  {{ $highlighted.Wrapped }}
+</details>
+{{- else }}
+{{ $highlighted.Wrapped }}
+{{- end }}

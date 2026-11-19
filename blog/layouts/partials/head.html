@@ -1,0 +1,65 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+
+{{- /* set theme before paint to avoid a flash */ -}}
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("theme") || "{{ .Site.Params.defaultTheme | default "light" }}";
+      if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    } catch (e) {}
+  })();
+</script>
+
+<script>
+  (function () {
+    try {
+      var state = JSON.parse(sessionStorage.getItem("paper-season-window-v1"));
+      if (Number.isFinite(state?.elapsed) && state.elapsed >= 0) {
+        document.documentElement.style.setProperty("--season-elapsed", state.elapsed + "ms");
+      }
+    } catch (e) {}
+  })();
+</script>
+
+{{- $title := .Title -}}
+{{- if .IsHome }}{{ $title = .Site.Title }}{{ else }}{{ $title = printf "%s · %s" .Title .Site.Title }}{{ end -}}
+<title>{{ $title }}</title>
+
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
+
+{{ with .Site.Params.favicon }}
+{{ $favicon := resources.Get . | resources.Copy "blog-assets/favicon.png" | fingerprint }}
+<link rel="icon" type="image/png" sizes="64x64" href="{{ $favicon.RelPermalink }}">
+{{ end }}
+
+{{ $css := slice (resources.Get "css/notebook.css") (resources.Get "css/site.css") (resources.Get "css/echo-drift.css") | resources.Concat "blog-assets/css/notebook-site.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ $paper := resources.Get "images/paper.webp" | resources.Copy "blog-assets/paper.webp" | fingerprint }}
+{{ $displayFont := resources.Get "fonts/slime-box.woff2" | resources.Copy "blog-assets/slime-box.woff2" | fingerprint }}
+{{ $treeSource := resources.Get "images/season-tree-atlas.png" }}
+{{ $benchSource := resources.Get "images/season-bench-atlas.png" }}
+{{ $treeAtlas := $treeSource.Process "webp q90" | resources.Copy "blog-assets/season-tree.webp" | fingerprint }}
+{{ $benchAtlas := $benchSource.Process "webp q90" | resources.Copy "blog-assets/season-bench.webp" | fingerprint }}
+<style>
+  :root {
+    --paper-texture: url("{{ $paper.RelPermalink }}");
+    --tree-atlas: url("{{ $treeAtlas.RelPermalink }}");
+    --tree-aspect: {{ div (float $treeSource.Width) (float $treeSource.Height) }};
+    --bench-atlas: url("{{ $benchAtlas.RelPermalink }}");
+    --bench-aspect: {{ div (float $benchSource.Width) (float $benchSource.Height) }};
+  }
+  @font-face {
+    font-family: "Slime Box";
+    src: url("{{ $displayFont.RelPermalink }}") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+  }
+</style>
+
+{{ if and (eq (hugo.Environment) "production") .Site.Config.Services.GoogleAnalytics.ID }}
+{{ template "_internal/google_analytics.html" . }}
+{{ end }}

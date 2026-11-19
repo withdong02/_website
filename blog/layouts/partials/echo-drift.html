@@ -1,0 +1,61 @@
+{{ $paper := resources.Get "images/paper.webp" | resources.Copy "blog-assets/paper.webp" | fingerprint }}
+<section class="echo-drift" data-running="false" aria-label="A tree through the seasons">
+  <div class="echo-drift-art" role="img" aria-label="A small paper tree and a long wooden bench share a quiet landscape through spring blossoms, summer waves, autumn leaves and winter snow.">
+    <svg class="echo-season-defs" width="0" height="0" aria-hidden="true">
+      <defs>
+        <pattern id="echo-season-paper" width="256" height="256" patternUnits="userSpaceOnUse"><image href="{{ $paper.RelPermalink }}" width="256" height="256"/></pattern>
+        <symbol id="echo-season-petal" viewBox="0 0 32 40">
+          <path d="M16 3C5-4-3 13 6 27l10 11 10-11C35 13 27-4 16 3Z" fill="currentColor"/>
+          <path d="M16 3C5-4-3 13 6 27l10 11 10-11C35 13 27-4 16 3Z" fill="url(#echo-season-paper)" opacity=".18"/>
+          <path d="m16 9 0 22" fill="none" stroke="#fff" stroke-opacity=".35"/>
+        </symbol>
+        <symbol id="echo-season-leaf" viewBox="0 0 44 52">
+          <path d="M23 2 29 14 40 10 36 25 43 29 28 37 23 48 17 38 2 30 10 24 5 10 17 14Z" fill="currentColor"/>
+          <path d="M23 2 29 14 40 10 36 25 43 29 28 37 23 48 17 38 2 30 10 24 5 10 17 14Z" fill="url(#echo-season-paper)" opacity=".2"/>
+          <path d="m23 8-1 43m0-22-9-9m9 15 10-10" fill="none" stroke="#93683e" stroke-opacity=".45" stroke-width="1.5"/>
+        </symbol>
+        <symbol id="echo-season-snow" viewBox="0 0 24 24">
+          <path d="M12 2v20M3.34 7l17.32 10M3.34 17 20.66 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </symbol>
+      </defs>
+    </svg>
+    {{ range slice
+      (dict "id" "spring" "name" "Spring" "particle" "petal" "count" 10 "landed" 5 "far" "M-60 70Q160 4 360 65T740 56T1260 65V180H-60Z" "near" "M-60 70Q220 130 480 58T960 76T1260 62V180H-60Z")
+      (dict "id" "summer" "name" "Summer" "particle" "leaf" "count" 2 "landed" 0 "far" "M-60 65Q160 20 400 65T820 50T1260 65V180H-60Z" "near" "M-60 62Q180 105 470 65T850 80T1260 62V180H-60Z")
+      (dict "id" "autumn" "name" "Autumn" "particle" "leaf" "count" 8 "landed" 10 "far" "M-60 66Q120 20 340 62T740 48T1260 78V180H-60Z" "near" "M-60 60Q180 125 450 62T860 80T1260 55V180H-60Z")
+      (dict "id" "winter" "name" "Winter" "particle" "snow" "count" 12 "landed" 0 "far" "M-60 84Q170 5 370 63T800 50T1260 74V180H-60Z" "near" "M-60 66Q170 110 400 65T830 80T1260 66V180H-60Z") }}
+    <div class="echo-season echo-season--{{ .id }}" aria-hidden="true">
+      <span class="echo-season-name" lang="en">{{ .name }}</span>
+      {{ if eq .id "summer" }}
+      <svg class="echo-season-water" viewBox="0 0 1200 100" preserveAspectRatio="none">
+        <path d="M-50 24Q150 8 350 23T760 20T1250 25V100H-50Z" fill="currentColor"/>
+        <path d="M-50 24Q150 8 350 23T760 20T1250 25V100H-50Z" fill="url(#echo-season-paper)" opacity=".18"/>
+      </svg>
+      {{ end }}
+      {{ range slice (dict "depth" "far" "path" .far) (dict "depth" "near" "path" .near) }}
+      <svg class="echo-season-ground echo-season-ground--{{ .depth }}" viewBox="0 0 1200 180" preserveAspectRatio="none">
+        <path d="{{ .path }}" fill="currentColor"/>
+        <path d="{{ .path }}" fill="url(#echo-season-paper)" opacity=".18" style="mix-blend-mode:multiply"/>
+      </svg>
+      {{ end }}
+      <div class="season-tree"></div>
+      <div class="season-bench"></div>
+      {{ $particle := .particle }}
+      {{ if .count }}
+      <div class="echo-season-particles">
+        {{ range seq .count }}<svg class="echo-season-particle echo-season-particle--{{ $particle }}"><use href="#echo-season-{{ $particle }}"/></svg>{{ end }}
+      </div>
+      {{ end }}
+      {{ if .landed }}
+      <div class="echo-season-scatter">
+        {{ range seq .landed }}<svg class="echo-season-grounded echo-season-grounded--{{ $particle }}"><use href="#echo-season-{{ $particle }}"/></svg>{{ end }}
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+  <button class="echo-drift-toggle" type="button" aria-label="Pause animation" title="Pause animation" hidden>
+    <svg class="icon echo-drift-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6v12M16 6v12"/></svg>
+    <svg class="icon echo-drift-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7Z"/></svg>
+  </button>
+</section>

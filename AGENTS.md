@@ -13,7 +13,7 @@
 - 本阶段用同样纸艺风格的小男孩替换原小女孩；参考原女生的四季穿搭，逐一覆盖 4 套季节服装、6 个主要角色视角/动作（冬 2、春 2、夏 1、秋 1）及原表情切换，不只替换一套。`summerWaveRef` 是海浪环境物件，不计为男孩版本。具体样稿待视觉确认，不默认制作用户本人的肖像。
 - 角色外观以原项目偏二维的薄纸片为准，避免立体玩偶式脸部、厚衣服、圆鼓体积和光晕。换装须保留可动分层与枢轴，眨眼、表情、骑行车轮、步行手脚、动静姿态切换均列入验收；不得用一整张静态人物图替换可动角色。尚未证实的原有眨眼实现需单独核对，不能将设计稿当作动画已完成。
 - 男孩五官以自然、清淡为准，不刻意做浓眉大眼；原女性部件不能直接压缩后视为已对齐概念稿。实装需对照已确认的轮廓、衣着与比例检查，几何与动作检查通过不等于美术验收通过。
-- 回声（Echo）按用户最新确认，作为湖蓝色纸艺摆件替换春季蓝色史莱姆，保留轻微呼吸起伏；沿用旧博客原始不规则轮廓和两只圆眼，无手脚、嘴或额外动物特征，不作为新增导览角色。分离体叫墨团（blot），本轮不接入分离或旧博客交互。保留旧素材，不因角色方向变化自行删除；旧博客的首页编排与样式不自动成为新站约束。
+- 回声（Echo）按用户最新确认，作为湖蓝色纸艺摆件替换春季蓝色史莱姆，保留轻微呼吸起伏；沿用旧博客原始不规则轮廓，双眼于 2026-11-18 按用户新图标同步为竖胶囊，无手脚、嘴或额外动物特征，不作为新增导览角色。分离体叫墨团（blot），本轮不接入分离或旧博客交互。保留旧素材，不因角色方向变化自行删除；旧博客的首页编排与样式不自动成为新站约束。
 
 ## 目录约定
 
@@ -26,7 +26,7 @@
 | `public/` | 新站前端的静态源资源；这里不是旧博客的 Hugo 构建产物目录 |
 | `public/draco/` | 从锁定版本的 Three.js 复制的 glTF Draco 解码器及许可证，由本站托管；更新依赖时核对版本与文件哈希 |
 | `Blender Files and Addon/`、`raw_assets/` | 沿用上游名称的美术源文件、插件及模型加工输入；先保留，不直接作为发布目录 |
-| `blog/` | 内容迁移阶段引入的 Hugo 源码：内容、配置、必要主题和模板、资源及相关检查；排除旧缓存、Git 数据、部署配置和旧构建产物 |
+| `blog/` | 内容迁移阶段引入的 Hugo 源码：内容、配置、必要主题和模板、资源及相关检查；当前为 Notebook 全量文章及夏季四入口接入，`migration-manifest.json` 留存导入时的源版本、文章哈希和历史路径；主题在 `blog/themes/notebook/` 锁定留存，站点改动放在 `blog/layouts/` 与 `blog/assets/`，短代码在 `blog/layouts/shortcodes/`，不直接改主题副本；构建、缓存及预览截图输出到 `.tmp/`，排除旧缓存、Git 数据、部署配置和旧构建产物 |
 | `scripts/`、`tests/` | 必要的构建衔接与有意义的自动检查，不预设框架 |
 | `.tmp/` | 可重建的上游暂存、截图、检查报告；不提交，阶段结束列明可清理项，删除仍须用户授权 |
 | `.sites-runtime/` | 本机安装工具产生的运行记录，不提交、不部署 |
@@ -35,17 +35,21 @@
 
 上游 Blender 源文件先保留原目录与名称，核查后再决定是否调整。新写源码优先小写 kebab-case；迁入的文章和上游文件先保留名称与路径。
 
+博客纸艺外观复用夏季场景的独立纸纤维贴图与 SlimeBox 英文字体，分别复制到 `blog/assets/images/paper.webp` 和 `blog/assets/fonts/slime-box.woff2`，由 Hugo 指纹管线发布；不从场景运行目录动态读取，不引入三维资源。栏目英文标题使用该字体，中文正文与代码继续使用现有字体。
+
 春季男孩样段由 `scripts/build-spring-boy.py` 从锁定的原角色 GLB 生成 `public/models/spring-boy.glb`，复用原角色图集；不覆盖原资产。模型的身体、左右眼和侧脸细节分别保留节点，角色运行组件放在现有模型目录；构建脚本不参与日常网站启动。
 
 春季左右介绍由 `scripts/build-spring-introduction.py` 生成独立的 `public/models/spring-introduction.glb`、背板 `public/textures/spring-introduction.webp` 与透明字形图集 `public/textures/spring-introduction-text.webp`，复用原 SlimeBox 字体和背板几何，仅替换旧介绍字形并清理对应烘焙字痕；原模型、图集和字体不覆盖。运行组件 `src/Experience/models/spring-introduction.jsx` 接入现有春季组件，人物、道具和路线沿用原实现。文案以 `DESIGN.md` 为准。
 
-春季回声的原轮廓与双眼复制为 `public/images/spring-echo.svg`；`scripts/build-spring-echo.py` 据此生成独立 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，复用原春季干净纸纹。运行组件 `src/Experience/models/spring-echo.jsx` 替换原史莱姆挂载位；重建不依赖 `D:\Blog` 的绝对路径，不覆盖或修改旧博客、原 GLB 和图集。
+春季回声的原轮廓与当前胶囊双眼保存在 `public/images/spring-echo.svg`；`scripts/build-spring-echo.py` 据此生成独立 `public/models/spring-echo.glb` 与 `public/textures/spring-echo.webp`，并复制 SVG 到 `blog/assets/images/echo.svg` 供站点复用，复用原春季干净纸纹。当前博客树木横幅不使用回声素材，旧素材保留。运行组件 `src/Experience/models/spring-echo.jsx` 替换原史莱姆挂载位；重建不依赖 `D:\Blog` 的绝对路径，不覆盖或修改旧博客、原 GLB 和图集。
+
+Articles 第一页及 Tags、Categories、Archives 总览的导航下方使用既有 `echo-drift.html` 实现“一棵树的四季”，桌面 170px、600px 以下 130px。用户于 2026-11-18 认可树与长椅的静态构图，并要求树左移、长椅加长、落花落叶增多；当前树约位于 33%、长椅位于 55%，根和椅脚接同一连续地面，原回声和独立底座退出横幅。`blog/assets/images/season-{tree,bench}-atlas.png` 为独立生成的透明四季图集，提示词嵌入 PNG 并附同名 JSON；Hugo 输出指纹 WebP，文字、地景、控件和飘落物仍由网页渲染，不将整张样稿当作运行背景。每季停留 14 秒、叠换 1.5 秒，一轮 62 秒；花瓣/落叶/细雪及地面散落物较原版增加，手机减量。`echo-drift.js` 控制可见时播放、读者暂停和减少动态效果下的静态春景，不加载三维或视频；四个栏目通过同一页签 sessionStorage 延续换季、粒子进度与暂停状态，首次绘制前恢复季节，避免切页闪回春景。第 2 页、标签/分类的具体文章列表和正文不显示横幅，分页锚点直接定位到文章网格；春季三维回声继续保留。
 
 春季蝴蝶由 `scripts/build-spring-butterflies.py` 生成独立 `public/models/spring-butterflies.glb` 与 `public/textures/spring-butterfly-paper.webp`。主蝶抬高并缩短吊线，顶部固定点保持原位；复用原蝶的纸片轮廓，另添三只较小的浅杏、淡紫和湖蓝纸蝶。原合并配景只拆出吊线，其余部件保留几何与原 UV；运行组件 `src/Experience/models/spring-butterflies.jsx` 替换原蝶和该合并网格，不覆盖原资产。
 
 夏季男孩由 `scripts/build-summer-boy.py` 生成 `public/models/summer-boy.glb`，复用已确认春季男孩的头脸纸片及原夏季角色的表情、手臂、冲浪板和图集。两季模型加工共用 `scripts/paper_parts.py` 的分件与纸片几何函数；夏季身体、笑脸、左右手臂保持独立节点。仅美术重建时运行生成脚本，不加入网站启动流程，不覆盖原模型、春季资产或共享贴图。
 
-夏季博客场景由 `scripts/build-summer-blog.py` 生成独立 `public/models/summer-blog.glb`、`public/textures/summer-blog-{1,2,3,paper,text}.webp`，第四张图集沿用原文件。原背板与五十片虚线路线保留几何和 UV，仅在新图集中局部修补旧字、照片与相机残影，并统一深蓝底景；四个原照片点位替换为独立纸艺模块及说明。运行组件 `src/Experience/models/summer-blog.jsx` 挂到现有 `Scene.jsx`，原 `Scene_3_Summer.jsx`、GLB、图集与 Blender 源文件保留。海草、螃蟹、遮阳伞沿用原动画参数和枢轴；未接入页面前，模块不设置假链接、点击手形或旧浮动牌交互。
+夏季博客场景由 `scripts/build-summer-blog.py` 生成独立 `public/models/summer-blog.glb`、`public/textures/summer-blog-{1,2,3,paper,text}.webp`，第四张图集沿用原文件。原背板与五十片虚线路线保留几何和 UV，仅在新图集中局部修补旧字、照片与相机残影，并统一深蓝底景；四个原照片点位替换为独立纸艺模块及说明。运行组件 `src/Experience/models/summer-blog.jsx` 挂到现有 `Scene.jsx`，原 `Scene_3_Summer.jsx`、GLB、图集与 Blender 源文件保留。海草、螃蟹、遮阳伞沿用原动画参数和枢轴；四个模块现通过 `summer-blog.jsx` 接入 Articles `/posts/`、Tags `/tags/`、Categories `/categories/`、Archives `/archives/`，纸卡点击与原生键盘链接共用真实地址；不恢复旧浮动牌交互。
 
 夏季天花板的贝壳纸风铃由同一生成器和图集生成，原天花板射线确定吊点，三片暖白/淡珊瑚/浅蓝扇贝、横杆与细吊线共用一个枢轴轻摆。保持薄纸片和小尺度，避开墙面介绍与四模块，不加入音效或新交互。
 
@@ -64,3 +68,5 @@
 - 常规检查统一使用 `npm run check` 和 `npm run lint`；角色阶段检查集中在 `tests/character-integrity-check.mjs`，不再按实现阶段重复建脚本。`tests/` 保留实际几何、动画与资源契约的检查，不为可逆视觉微调新增机械复述实现的断言。上游不再使用的实验组件、失效的 `gen:models` 批处理和 Vite 模板图标已清理，保留的原秋季组件及原素材仍按既有约定留存。
 - 冷启动、加载失败、低性能设备、触屏及键盘操作属于实际验收内容；正文阅读期间停止不必要的场景运动。
 - 不自行复制或修改旧站 CI/CD、`.env`、密钥或部署配置；推送、公开发布、删除、系统变更等继续遵守用户授权边界。
+
+博客接入使用原生页面导航：`blog-navigation.js` 保存路线进度和缩放，只有有效返回参数或历史标记才恢复；首次访问根路径仍从春季开始。`npm run build` 由 `scripts/build-site.mjs` 在 `.tmp/` 分别暂存 Vite/Hugo，校验路径冲突后输出统一 `dist/`，旧输出留存而不删除。场景占根首页，博客占原 `/posts/`、`/tags/`、`/categories/`、`/archives/` 与 `/blog-assets/`；本地 Vite 同源代理 Hugo 后台。固定全屏 Canvas 使用 `eventPrefix="client"`，保证 HTML 入口与画布事件使用同一视口坐标，避免链接局部 offset 引起视角跳动。

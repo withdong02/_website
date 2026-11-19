@@ -1,0 +1,18 @@
+{{ define "main" }}
+<article class="post">
+  <h1 class="post-title">{{ .Title }}</h1>
+  <div class="post-meta">
+    <span>{{ partial "icon.html" "calendar" }}<time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format .Site.Params.DateFormat }}</time></span>
+    <span>{{ partial "icon.html" "clock" }}{{ .ReadingTime }} min read</span>
+    <span class="tags">{{ range .GetTerms "tags" }}<a href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}</span>
+  </div>
+  {{ if .Fragments.Headings }}
+  <details class="article-toc">
+    <summary>On this page</summary>
+    {{ .TableOfContents }}
+  </details>
+  {{ end }}
+  <div class="post-content ruled">{{ .Content }}</div>
+  <a class="back-to-posts" href="{{ "posts/" | relURL }}">← Back to articles</a>
+</article>
+{{ end }}
