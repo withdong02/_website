@@ -163,6 +163,8 @@ python -m http.server 4173 --bind 127.0.0.1 --directory dist
 
 用户于 2026-11-19 明确授权每次推送 `main` 自动构建并上线。[Deploy website](https://github.com/withdong02/_website/actions/workflows/deploy.yml) 没有手动审批，也没有路径过滤；后续正常 `git push origin main` 即会触发。
 
+首次完整自动发布 [44489597191](https://github.com/withdong02/_website/actions/runs/44489597191) 已成功上线源码 `f59dedc`：13 项站点检查、4 项 Linux 部署测试、lint、构建、增量上传和公网探针全部通过，226 个文件在服务器逐项核对。线上 21 篇文章已移除阅读时间，所有有目录的文章默认展开。真机与低性能设备验收仍待进行。
+
 1. GitHub 托管 Ubuntu 使用 Node.js 24、Hugo extended 0.161.1，依次执行 `npm ci`、`npm run check`、`python3 tests/deploy-site-check.py`、`npm run lint`、`npm run build`。
 2. 获取现役版本的文件清单，`scripts/deploy-site.py pack` 只打包有变化的文件，并附上完整 SHA-256 清单。检查或构建失败不会接触线上版本。
 3. 确认提交仍是最新 `main` 后，经专用 SSH 密钥发送产物；连续推送保留正在运行的发布及最新待运行版本，过期提交不会覆盖最新源码。部署任务串行，服务器另有文件锁。

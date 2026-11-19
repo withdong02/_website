@@ -2,7 +2,7 @@
 
 ## 当前发布状态（2026-11-19）
 
-当前源码 `df66add` 已按用户授权发布为 `https://blog.withdong02.top/` 的场景与博客统一静态站；回声 favicon 两份字节相同。生产 Hugo baseURL 已设置为该域名，production 不输出预览 noindex。发布与回滚事实见 `README.md`，后续功能缺口见 `MIGRATION.md`。以下各日期的“未发布”“待接通”均为当时记录；当前树木横幅已改为 14 秒停留、1.5 秒叠换的一轮 62 秒，并跨栏目延续进度。
+首次人工上线源码为 `df66add`，随后用户授权每次推送 `main` 自动构建并发布 `https://blog.withdong02.top/`；自动发布首次成功为 `f59dedc`，Actions 运行 `44489597191`。回声 favicon 两份字节相同。生产 Hugo baseURL 已设置为该域名，production 不输出预览 noindex。发布与回滚事实见 `README.md`，后续功能缺口见 `MIGRATION.md`。以下各日期的“未发布”“待接通”均为当时记录；当前树木横幅已改为 14 秒停留、1.5 秒叠换的一轮 62 秒，并跨栏目延续进度。
 
 ## 一棵树的四季接入（2026-11-18）
 
