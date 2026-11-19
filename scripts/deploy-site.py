@@ -131,12 +131,12 @@ if __name__ == '__main__':
     elif sys.argv[1:] == ['receive']:
         import fcntl
         root = Path('/var/www/papercraft')
-        with (root / '.deploy.lock').open('a') as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            command = os.environ.get('SSH_ORIGINAL_COMMAND', '')
-            if command == 'manifest':
-                print((root / 'current').resolve(strict=True).parent.joinpath('manifest.json').read_text())
-            else:
+        command = os.environ.get('SSH_ORIGINAL_COMMAND', '')
+        if command == 'manifest':
+            print((root / 'current').resolve(strict=True).parent.joinpath('manifest.json').read_text())
+        else:
+            with (root / '.deploy.lock').open('a') as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX)
                 deploy(root, command, sys.stdin.buffer)
     else:
         sys.exit('Usage: deploy-site.py pack [previous-manifest.json]|receive')
