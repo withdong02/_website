@@ -61,6 +61,34 @@ class DeploySiteCheck(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Expected deploy'):
             deploy_site.deploy(self.base, 'deploy ../../etc; whoami', io.BytesIO())
 
+    @unittest.skipIf(os.name == 'nt', 'Incremental hardlinks run on the Linux server')
+    def test_incremental_files_and_immutable_previous(self):
+        old = self.base / 'old'
+        old.mkdir()
+        with self.archive.open('rb') as stream:
+            manifest = deploy_site.unpack(stream, old)
+        previous = old / 'site'
+        (previous / 'retired.txt').write_text('Not in the new build')
+        (self.source / 'index.html').write_bytes(b'new homepage')
+        delta = self.base / 'delta.tar.gz'
+        deploy_site.package(self.source, delta, manifest)
+        with tarfile.open(delta) as archive:
+            self.assertEqual(archive.getnames(), ['site/index.html', 'manifest.json'])
+        new = self.base / 'new'
+        new.mkdir()
+        with delta.open('rb') as stream:
+            deploy_site.unpack(stream, new, previous)
+        self.assertEqual((previous / 'index.html').read_bytes(), b'index.html')
+        self.assertEqual((new / 'site/index.html').read_bytes(), b'new homepage')
+        self.assertFalse((new / 'site/retired.txt').exists())
+        self.assertEqual((previous / 'tags/index.html').stat().st_ino,
+                         (new / 'site/tags/index.html').stat().st_ino)
+        copied = self.base / 'copied'
+        copied.mkdir()
+        with delta.open('rb') as stream, patch.object(deploy_site.os, 'link', side_effect=PermissionError):
+            deploy_site.unpack(stream, copied, previous)
+        self.assertEqual((copied / 'site/tags/index.html').read_bytes(), b'tags/index.html')
+
     @unittest.skipIf(os.name == 'nt', 'Release symlinks run on the Linux server')
     def test_switch_and_rollback(self):
         root = self.base / 'hosting'
