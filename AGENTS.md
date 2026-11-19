@@ -70,3 +70,5 @@ Articles 第一页及 Tags、Categories、Archives 总览的导航下方使用�
 - 不自行复制或修改旧站 CI/CD、`.env`、密钥或部署配置；推送、公开发布、删除、系统变更等继续遵守用户授权边界。
 
 博客接入使用原生页面导航：`blog-navigation.js` 保存路线进度和缩放，只有有效返回参数或历史标记才恢复；首次访问根路径仍从春季开始。`npm run build` 由 `scripts/build-site.mjs` 在 `.tmp/` 分别暂存 Vite/Hugo，校验路径冲突后输出统一 `dist/`，旧输出留存而不删除。场景占根首页，博客占原 `/posts/`、`/tags/`、`/categories/`、`/archives/` 与 `/blog-assets/`；本地 Vite 同源代理 Hugo 后台。固定全屏 Canvas 使用 `eventPrefix="client"`，保证 HTML 入口与画布事件使用同一视口坐标，避免链接局部 offset 引起视角跳动。
+
+2026-11-19 已按用户专项授权用当前候选替换线上博客；部署/回滚入口见 `README.md`，阶段缺口见 `MIGRATION.md`。生产 `baseURL` 为 `https://blog.withdong02.top/`，仅非 production 环境输出 noindex；本地 dev 命令覆盖地址。旧 Blog 工作流已停用，旧源码与 `/var/www/blog` 保留，新站使用独立 `/var/www/papercraft/current`。本次授权不自动覆盖未来发布。

@@ -71,7 +71,7 @@ Start-Process -FilePath (Get-Command hugo).Source `
 
 夏季四张纸卡分别进入 `/posts/`、`/tags/`、`/categories/`、`/archives/`，支持纸卡点击和原生链接键盘操作。博客右上角的返回箭头与浏览器后退恢复路线位置和缩放；新访问根路径仍从春季开始。状态仅存当前标签页的 sessionStorage，存储被禁用时仍可跳转，但不恢复位置。
 
-`npm run build` 先将 Vite 与 Hugo 构建到新的 `.tmp/site-build-*/`，校验冲突后合并成 `dist/`。场景占 `/index.html`，Hugo 保留文章与分类等历史路径、404、RSS 和 sitemap，资源集中于 `/blog-assets/`；旧首页 `/page/N/` 转到 `/posts/page/N/`。旧 `dist/` 留存在对应暂存目录的 `previous-dist/`，不批量删除。用 `python -m http.server 4173 --bind 127.0.0.1 --directory dist` 验证独立静态包；静态托管应按真实文件返回，不能用场景首页兜底博客深链接。页面目前保留 `noindex`，搜索、评论、生产配置和发布仍未完成。
+`npm run build` 先将 Vite 与 Hugo 构建到新的 `.tmp/site-build-*/`，校验冲突后合并成 `dist/`。场景占 `/index.html`，Hugo 保留文章与分类等历史路径、RSS 和 sitemap，资源集中于 `/blog-assets/`；旧首页 `/page/N/` 转到 `/posts/page/N/`。旧 `dist/` 留存在对应暂存目录的 `previous-dist/`，不批量删除。用 `python -m http.server 4173 --bind 127.0.0.1 --directory dist` 验证独立静态包；静态托管应按真实文件返回，不能用场景首页兜底博客深链接。生产构建使用 `https://blog.withdong02.top/`，仅非 production 环境保留 `noindex`；开发命令仍覆盖为本机地址。搜索、评论尚未接入。
 
 ## 场景资源重建与检查说明
 
@@ -157,7 +157,26 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 python -m http.server 4173 --bind 127.0.0.1 --directory dist
 ```
 
-最终只托管 `dist/`，不把本地开发或预览服务用于生产。当前按域名根目录和 HTTPS 规划，需正确提供 JavaScript/WASM MIME 与完整资源目录。完整博客与相册的构建合并尚待迁移阶段实现；生产发布另行授权。
+最终只托管 `dist/`，不把本地开发或预览服务用于生产。场景与博客已统一构建；独立相册、联系和音乐页面仍未接入。
+
+### 2026-11-19 授权发布
+
+用户授权当前版本替换线上博客。线上地址为 [blog.withdong02.top](https://blog.withdong02.top/)，根域名与 www 继续保留路径跳转。发布源码为 `df66add903e1e12ec2f2a28c147c5a7bd679a85d`；新仓库为 [withdong02/_website](https://github.com/withdong02/_website)。本次为人工静态发布，没有新增自动部署工作流。
+
+- Nginx 配置：`/etc/nginx/sites-available/blog-subdomain`；根目录为 `/var/www/papercraft/current`，指向 `/var/www/papercraft/releases/20261119-df66add/site`。保留真实文件 404，提供 `application/wasm`，启用 JS/CSS/WASM gzip；未指纹化的场景字体缓存改为 1 小时。
+- 旧站 `/var/www/blog` 原样保留。旧仓库 `withdong02/Blog` 的 Deploy blog 工作流（ID `277254653`）已通过 GitHub API 停用，状态 `disabled_manually`，没有改动 `D:\Blog` 源码、密钥或 SSH 授权。旧受限发布密钥仍只写旧目录，不能覆盖新目录。
+- 回滚备份：`/var/backups/website-20261119/`（root，0700），含 `old-blog.tar.gz`、原 `blog-subdomain.conf`、域名跳转配置、切换前 Nginx 展开配置、哈希及文件清单。备份校验、226 个发布文件逐项 SHA-256 核对均通过。
+- 发布包已从上传临时位置移入 `/var/backups/website-20261119/website-df66add.tar.gz`（root:root 0600），SHA-256 `1c09a88e665a6621e4777216ce8ca49f75f3f046a6db0d73238be12bb427b0a1`。版本目录的 `manifest.json` 留存全部文件哈希，它位于站点根目录之外。
+- 本地 13 项检查、lint、统一构建通过。公网 226 个文件哈希、28 条路由（含全部 21 篇历史文章、四栏目及两页分页）通过；缺页 404，RSS/sitemap 使用生产域名。浏览器已验证春季冷启动、夏季四纸卡分别进入对应栏目并返回同一位置、10/10/1 分页、中文深链接刷新；正文不请求三维模型。390px 博客无横向溢出，横幅 130px。真机、低性能设备未验收。
+
+需要回滚时，使用服务器运维目录的 `srv.py` 执行以下明确命令；不用删除或覆盖旧站文件：
+
+```sh
+cp -a /var/backups/website-20261119/blog-subdomain.conf /etc/nginx/sites-available/blog-subdomain
+nginx -t && systemctl reload nginx
+```
+
+回滚后用 HTTPS 核对首页 SHA-256 为 `e2c78533649600f4b328d8d7be851bcaf7a01e7845380d8133f2b9ed58f7cb11`，再检查历史文章。新版本目录和 `current` 链接可保留，不影响回滚到旧目录。后续发布应构建到新的版本目录、核对文件清单后原子替换 `current` 符号链接；不能再向旧 `/var/www/blog` 上传来发布新站。每次生产发布继续单独取得授权。
 
 ## 上游与署名
 
