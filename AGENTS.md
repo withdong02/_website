@@ -28,6 +28,7 @@
 | `Blender Files and Addon/`、`raw_assets/` | 沿用上游名称的美术源文件、插件及模型加工输入；先保留，不直接作为发布目录 |
 | `blog/` | 内容迁移阶段引入的 Hugo 源码：内容、配置、必要主题和模板、资源及相关检查；当前为 Notebook 全量文章及夏季四入口接入，`migration-manifest.json` 留存导入时的源版本、文章哈希和历史路径；主题在 `blog/themes/notebook/` 锁定留存，站点改动放在 `blog/layouts/` 与 `blog/assets/`，短代码在 `blog/layouts/shortcodes/`，不直接改主题副本；构建、缓存及预览截图输出到 `.tmp/`，排除旧缓存、Git 数据、部署配置和旧构建产物 |
 | `scripts/`、`tests/` | 必要的构建衔接与有意义的自动检查，不预设框架 |
+| `.github/workflows/` | `main` 推送自动检查、构建与发布；使用专用受限 SSH 密钥，只发布统一静态产物，不覆盖其他服务 |
 | `.tmp/` | 可重建的上游暂存、截图、检查报告；不提交，阶段结束列明可清理项，删除仍须用户授权 |
 | `.sites-runtime/` | 本机安装工具产生的运行记录，不提交、不部署 |
 | `.workbuddy/` | 本机会话的工作日志与工具记录，不提交、不部署；只作为本地过程记录，不作为项目交付物或状态来源 |
@@ -71,4 +72,4 @@ Articles 第一页及 Tags、Categories、Archives 总览的导航下方使用�
 
 博客接入使用原生页面导航：`blog-navigation.js` 保存路线进度和缩放，只有有效返回参数或历史标记才恢复；首次访问根路径仍从春季开始。`npm run build` 由 `scripts/build-site.mjs` 在 `.tmp/` 分别暂存 Vite/Hugo，校验路径冲突后输出统一 `dist/`，旧输出留存而不删除。场景占根首页，博客占原 `/posts/`、`/tags/`、`/categories/`、`/archives/` 与 `/blog-assets/`；本地 Vite 同源代理 Hugo 后台。固定全屏 Canvas 使用 `eventPrefix="client"`，保证 HTML 入口与画布事件使用同一视口坐标，避免链接局部 offset 引起视角跳动。
 
-2026-11-19 已按用户专项授权用当前候选替换线上博客；部署/回滚入口见 `README.md`，阶段缺口见 `MIGRATION.md`。生产 `baseURL` 为 `https://blog.withdong02.top/`，仅非 production 环境输出 noindex；本地 dev 命令覆盖地址。旧 Blog 工作流已停用，旧源码与 `/var/www/blog` 保留，新站使用独立 `/var/www/papercraft/current`。本次授权不自动覆盖未来发布。
+2026-11-19 已按用户专项授权用当前候选替换线上博客；部署/回滚入口见 `README.md`，阶段缺口见 `MIGRATION.md`。生产 `baseURL` 为 `https://blog.withdong02.top/`，仅非 production 环境输出 noindex；本地 dev 命令覆盖地址。旧 Blog 工作流已停用，旧源码与 `/var/www/blog` 保留，新站使用独立 `/var/www/papercraft/current`。用户随后明确授权每次推送 `main` 自动检查、构建并上线，无需再次确认；服务器部署脚本保留上一版本，失败恢复旧链接，不自动清理版本。
