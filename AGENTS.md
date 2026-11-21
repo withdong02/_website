@@ -72,4 +72,6 @@ Articles 第一页及 Tags、Categories、Archives 总览的导航下方使用�
 
 博客接入使用原生页面导航：`blog-navigation.js` 保存路线进度和缩放，只有有效返回参数或历史标记才恢复；首次访问根路径仍从春季开始。`npm run build` 由 `scripts/build-site.mjs` 在 `.tmp/` 分别暂存 Vite/Hugo，校验路径冲突后输出统一 `dist/`，旧输出留存而不删除。场景占根首页，博客占原 `/posts/`、`/tags/`、`/categories/`、`/archives/` 与 `/blog-assets/`；本地 Vite 同源代理 Hugo 后台。固定全屏 Canvas 使用 `eventPrefix="client"`，保证 HTML 入口与画布事件使用同一视口坐标，避免链接局部 offset 引起视角跳动。
 
+2026-11-21 起，离开场景同时保存当前 Navigation 历史条目 key；博客 `scene-return.js` 优先遍历回该同源根页面，允许浏览器 BFCache 直接恢复原场景，跨栏目及正文后仍回到同一条目。历史条目不存在或浏览器不支持时保留 `/?resume=blog` 原生地址；有效返回仅显示简短等待提示，场景就绪即恢复，不重播四象限开场。首次访问与无效返回记录仍保留原开场；不为返回加速在博客内常驻三维场景。
+
 2026-11-19 已按用户专项授权用当前候选替换线上博客；部署/回滚入口见 `README.md`，阶段缺口见 `MIGRATION.md`。生产 `baseURL` 为 `https://blog.withdong02.top/`，仅非 production 环境输出 noindex；本地 dev 命令覆盖地址。旧 Blog 工作流已停用，旧源码与 `/var/www/blog` 保留，新站使用独立 `/var/www/papercraft/current`。用户随后明确授权每次推送 `main` 自动检查、构建并上线，无需再次确认；服务器部署脚本保留上一版本，失败恢复旧链接，不自动清理版本。

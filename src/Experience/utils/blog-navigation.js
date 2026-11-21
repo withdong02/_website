@@ -29,7 +29,8 @@ export const sceneReturn = (() => {
 
 export function rememberScene(progress, zoom) {
   try {
-    window.sessionStorage.setItem(storageKey, JSON.stringify({ progress, zoom }));
+    window.sessionStorage.setItem(storageKey, JSON.stringify({ progress, zoom,
+      entryKey: window.navigation?.currentEntry?.key }));
     window.history.replaceState({ ...window.history.state, blogReturn: true }, "");
   } catch { /* Navigation still works when browser storage is unavailable. */ }
 }

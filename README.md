@@ -161,6 +161,8 @@ python -m http.server 4173 --bind 127.0.0.1 --directory dist
 
 ### main 自动发布
 
+博客的返回箭头优先回到浏览器历史里离开时的场景页面，命中 BFCache 时直接恢复原位置与缩放，不重新请求模型。浏览器不支持或历史条目已丢失时，仍通过 `/?resume=blog` 恢复保存的位置，只显示简短等待提示；首次访问保留原开场。该逻辑位于 `blog/assets/js/scene-return.js` 与场景的 `blog-navigation.js`，博客正文仍不加载三维资源。
+
 用户于 2026-11-19 明确授权每次推送 `main` 自动构建并上线。[Deploy website](https://github.com/withdong02/_website/actions/workflows/deploy.yml) 没有手动审批，也没有路径过滤；后续正常 `git push origin main` 即会触发。
 
 首次完整自动发布 [44489597191](https://github.com/withdong02/_website/actions/runs/44489597191) 已成功上线源码 `f59dedc`：13 项站点检查、4 项 Linux 部署测试、lint、构建、增量上传和公网探针全部通过，226 个文件在服务器逐项核对。线上 21 篇文章已移除阅读时间，所有有目录的文章默认展开。真机与低性能设备验收仍待进行。

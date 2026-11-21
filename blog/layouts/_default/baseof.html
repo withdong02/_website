@@ -17,6 +17,8 @@
   </div>
   {{ $grid := resources.Get "js/starfield.js" | resources.Copy "blog-assets/js/starfield.js" | minify | fingerprint }}
   <script src="{{ $grid.RelPermalink }}" integrity="{{ $grid.Data.Integrity }}" defer></script>
+  {{ $sceneReturn := resources.Get "js/scene-return.js" | resources.Copy "blog-assets/js/scene-return.js" | minify | fingerprint }}
+  <script src="{{ $sceneReturn.RelPermalink }}" integrity="{{ $sceneReturn.Data.Integrity }}" defer></script>
   {{ if or .IsHome (eq .Kind "taxonomy") (eq .Layout "archives") (and (eq .Kind "section") (eq .Section "posts")) }}
     {{ $drift := resources.Get "js/echo-drift.js" | resources.Copy "blog-assets/js/echo-drift.js" | minify | fingerprint }}
     <script src="{{ $drift.RelPermalink }}" integrity="{{ $drift.Data.Integrity }}" defer></script>

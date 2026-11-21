@@ -7,6 +7,15 @@
   z-index: 99999999999999;
 }
 
+.loading-screen--return {
+  display: grid;
+  place-items: center;
+  background: #e6e9ec;
+  color: #173d55;
+  font-family: "Slime Box", sans-serif;
+  font-size: clamp(18px, 4vw, 24px);
+}
+
 .quadrant {
   position: absolute;
   width: calc(50% + 30px);

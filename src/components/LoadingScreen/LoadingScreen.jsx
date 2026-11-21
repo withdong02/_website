@@ -35,6 +35,11 @@ const LoadingScreen = () => {
 
     setIsExperienceReady(true);
 
+    if (sceneReturn) {
+      setGone(true);
+      return;
+    }
+
     gsap.to(tlRef.current, {
       top: "-100%",
       left: "-100%",
@@ -67,6 +72,12 @@ const LoadingScreen = () => {
   // Assets finished downloading AND the scene has mounted/compiled
 
   if (gone) return null;
+
+  if (sceneReturn) return (
+    <div className="loading-screen loading-screen--return" role="status" aria-live="polite">
+      <p>Returning to your spot…</p>
+    </div>
+  );
 
   return (
     <>
