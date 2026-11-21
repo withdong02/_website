@@ -169,7 +169,7 @@ python -m http.server 4173 --bind 127.0.0.1 --directory dist
 
 1. GitHub 托管 Ubuntu 使用 Node.js 24、Hugo extended 0.161.1，依次执行 `npm ci`、`npm run check`、`python3 tests/deploy-site-check.py`、`npm run lint`、`npm run build`。
 2. 获取现役版本的文件清单，`scripts/deploy-site.py pack` 只打包有变化的文件，并附上完整 SHA-256 清单。检查或构建失败不会接触线上版本。
-3. 确认提交仍是最新 `main` 后，经专用 SSH 密钥发送产物；连续推送保留正在运行的发布及最新待运行版本，过期提交不会覆盖最新源码。部署任务串行，服务器另有文件锁。
+3. 确认提交仍是最新 `main` 后，经专用 SSH 密钥发送产物；首次连接失败最多尝试三次，清单查询和上传复用连接。连续推送保留正在运行的发布及最新待运行版本，过期提交不会覆盖最新源码。部署任务串行，服务器另有文件锁。
 4. 服务器接收脚本验证归档路径、文件类型、体积、清单及哈希，将新版本存入 `/var/www/papercraft/releases/<commit>-<run-id>-<attempt>/site`。未变化的文件优先通过硬链接复用；首次人工版本文件属于 root，无法硬链接时复制。只复用新清单中的文件，不累积已移除文件，也不改写旧版本；将原版本记入 `previous`，原子切换 `current`。
 5. 服务器通过本机 HTTPS 核对首页、四栏目、文章样本和 Draco 文件；失败自动恢复旧链接。最后 Actions 检查公网首页与四栏目。公网网络异常会令运行显示失败，但不撤回已经通过服务器核验的版本。
 
