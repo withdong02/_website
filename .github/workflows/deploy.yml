@@ -34,7 +34,7 @@ jobs:
           echo "$RUNNER_TEMP/hugo-bin" >> "$GITHUB_PATH"
       - run: npm ci
       - run: npm run check
-      - run: python3 tests/deploy-site-check.py
+      - run: python3 tests/deploy/deploy-site-check.py
       - run: npm run lint
       - run: npm run build
       - name: Deploy current main
@@ -52,19 +52,20 @@ jobs:
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/website_deploy
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/website_deploy ~/.ssh/known_hosts
+          mkdir -p .tmp/deploy
           ssh_options=(-T -i ~/.ssh/website_deploy -o IdentitiesOnly=yes -o BatchMode=yes
             -o StrictHostKeyChecking=yes -o ConnectTimeout=20 -o ServerAliveInterval=15
             -o ControlMaster=auto -o ControlPersist=60 -o "ControlPath=$RUNNER_TEMP/website-ssh")
           for attempt in 1 2 3; do
-            if ssh "${ssh_options[@]}" ubuntu@124.221.38.221 manifest > .tmp/current-manifest.json; then
+            if ssh "${ssh_options[@]}" ubuntu@124.221.38.221 manifest > .tmp/deploy/current-manifest.json; then
               break
             fi
             if [ "$attempt" = 3 ]; then exit 1; fi
             sleep 5
           done
-          python3 scripts/deploy-site.py pack .tmp/current-manifest.json
+          python3 scripts/deploy/deploy-site.py pack .tmp/deploy/current-manifest.json
           ssh "${ssh_options[@]}" \
-            ubuntu@124.221.38.221 "deploy $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT" < .tmp/site.tar.gz
+            ubuntu@124.221.38.221 "deploy $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT" < .tmp/deploy/site.tar.gz
       - name: Verify public site
         run: |
           for route in / /posts/ /tags/ /categories/ /archives/; do

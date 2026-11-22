@@ -10,8 +10,8 @@ buildFuture: true
 summaryLength: 60
 pagination:
   pagerSize: 10
-publishDir: ../.tmp/notebook-preview
-resourceDir: ../.tmp/notebook-resources
+publishDir: ../.tmp/preview/blog
+resourceDir: ../.tmp/cache/hugo
 caches:
   getresource:
     dir: :resourceDir/_gen

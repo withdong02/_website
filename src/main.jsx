@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import './configure-loaders.js'
-import App from './App.jsx'
+import './scene/loaders/configure-loaders.js'
+import App from './app.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

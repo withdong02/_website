@@ -5,11 +5,10 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  // Original fall JSX is retained for reference; generated/vendor/local files are not project source.
+  // Generated, vendor and local files are not project source.
   globalIgnores([
-    'dist/**', 'public/**', 'raw_assets/**',
+    'dist/**', 'public/**', 'assets/**',
     '.tmp/**', '.sites-runtime/**', '.workbuddy/**',
-    'src/Experience/models/Scene_4_Fall.jsx',
   ]),
   {
     files: ['src/**/*.{js,jsx}', 'blog/assets/js/**/*.js'],

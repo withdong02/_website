@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "node scripts/build-site.mjs",
+    "build": "node scripts/build/build-site.mjs",
     "blog:build": "hugo --source blog --noBuildLock",
     "blog:dev": "hugo server --source blog --noBuildLock --bind 127.0.0.1 --port 1313 --disableFastRender --baseURL http://127.0.0.1:5173/ --appendPort=false",
     "lint": "eslint .",
-    "check": "node --test tests/*-check.mjs",
+    "check": "node --test tests/scene/*-check.mjs tests/blog/*-check.mjs tests/build/*-check.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
