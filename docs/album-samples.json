@@ -1,0 +1,113 @@
+{
+  "purpose": "Local preview samples, not personal photographs or full-resolution originals",
+  "photos": [
+    {
+      "file": "assets/photos/山湖（示例）/01-mountain-lake.jpg",
+      "source": "https://www.pexels.com/photo/landscape-photography-of-mountain-1574184/",
+      "download": "https://images.pexels.com/photos/1574184/pexels-photo-1574184.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "James Wheeler",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 1545,
+      "bytes": 507484,
+      "sha256": "c86aeb2bc6bae6ee03383d8193caefe45b05cb2266be974de4d0bdfd5dd68f62"
+    },
+    {
+      "file": "assets/photos/山湖（示例）/02-alpine-lake.jpg",
+      "source": "https://www.pexels.com/photo/landscape-scenery-of-a-lake-between-mountains-13614138/",
+      "download": "https://images.pexels.com/photos/13614138/pexels-photo-13614138.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Andreas Ebner",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 3600,
+      "bytes": 1114055,
+      "sha256": "4714ed3af2df3ca21a05e29f0477a73c19ef3501bc84b70037484b0b550a40cf"
+    },
+    {
+      "file": "assets/photos/山湖（示例）/03-mountain-water.jpg",
+      "source": "https://www.pexels.com/photo/mountain-by-lake-in-landscape-19502153/",
+      "download": "https://images.pexels.com/photos/19502153/pexels-photo-19502153.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Liudmyla Shalimova",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 3600,
+      "bytes": 927854,
+      "sha256": "ecaf1e71d9cc8731f417f1e3b3c06053c85cc3400a641ff615b79c00f61bcaf0"
+    },
+    {
+      "file": "assets/photos/森林（示例）/01-forest-river.jpg",
+      "source": "https://www.pexels.com/photo/landscape-scenery-of-a-river-surrounded-by-green-trees-14833320/",
+      "download": "https://images.pexels.com/photos/14833320/pexels-photo-14833320.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Amaury Michaux",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 3196,
+      "bytes": 1373225,
+      "sha256": "dd1a7144076791f0d9ad1893312245e21c495a65c4baa7d6cba58a685b5e7d44"
+    },
+    {
+      "file": "assets/photos/森林（示例）/02-autumn-river.jpg",
+      "source": "https://www.pexels.com/photo/landscape-of-river-and-forest-9665012/",
+      "download": "https://images.pexels.com/photos/9665012/pexels-photo-9665012.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Lisa Fotios",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 3200,
+      "bytes": 1408701,
+      "sha256": "5a5237157c63490e6905d45d297fadbc08f582d0f38f4d1d13b751b7f8db403d"
+    },
+    {
+      "file": "assets/photos/森林（示例）/03-rocky-stream.jpg",
+      "source": "https://www.pexels.com/photo/scenic-forest-river-flowing-through-rocky-landscape-40468155/",
+      "download": "https://images.pexels.com/photos/40468155/pexels-photo-40468155.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Nico Becker",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 3600,
+      "bytes": 1686604,
+      "sha256": "047ecffc4cc7cf069b1a47facb5315b1a782e53a4a5134eab60a1334c7c32290"
+    },
+    {
+      "file": "assets/photos/海岸（示例）/01-coastal-cliffs.jpg",
+      "source": "https://www.pexels.com/photo/sea-landscape-with-cliffs-8034467/",
+      "download": "https://images.pexels.com/photos/8034467/pexels-photo-8034467.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "lee duc",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 1600,
+      "bytes": 290776,
+      "sha256": "884e2630b61889bf1b662c5b4c5fc63dd1d29f3a2f495e1ef0d5b85fcbdf18ed"
+    },
+    {
+      "file": "assets/photos/海岸（示例）/02-film-coast.jpg",
+      "source": "https://www.pexels.com/photo/film-photograph-of-a-coast-with-cliffs-7224231/",
+      "download": "https://images.pexels.com/photos/7224231/pexels-photo-7224231.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Simon Gough",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 1556,
+      "bytes": 292397,
+      "sha256": "c44eb6cfbaa03e2b13824596cc764f2e3a97c561bf0f49548156b7d155a933bf"
+    },
+    {
+      "file": "assets/photos/海岸（示例）/03-misty-beach.jpg",
+      "source": "https://www.pexels.com/photo/ocean-waves-on-beach-side-132707/",
+      "download": "https://images.pexels.com/photos/132707/pexels-photo-132707.jpeg?auto=compress&cs=tinysrgb&w=2400",
+      "photographer": "Snapwire",
+      "license": "https://www.pexels.com/license/",
+      "downloadedOn": "2026-11-22",
+      "width": 2400,
+      "height": 1602,
+      "bytes": 285462,
+      "sha256": "faaa39da0305f7e99c5ce9340d535dcba62d6f177246e918878373886bd3dd91"
+    }
+  ]
+}

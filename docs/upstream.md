@@ -1,5 +1,82 @@
 # 上游来源、验证与发布记录
 
+## 相册与博客共用背景主题（2026-11-25，本地未发布）
+
+将博客原有配色、纸纹和格子层样式提取到 `blog/assets/css/paper-theme.css`，Hugo 与相册 Vite 共用；相册直接加载既有 starfield 格子脚本。主题按钮逻辑从博客内联提取到 `blog/assets/js/theme.js`，两页共用并保持 theme 存储键，按钮提供按下状态。相册首次绘制前恢复主题，照片墙、大图与全屏加载页跟随配色；不加入微型四季场景，不改照片浏览。
+
+15 项检查通过，主题脚本新增明暗切换、持久化与存储不可用断言后复测通过；lint、统一构建与 UI 扫描通过。浏览器确认桌面明暗背景、格子画布、暗色大图、相册到博客的主题继承及反向切换，390×844 无横向溢出、刷新保持主题；测试结束恢复浅色。截图 `.tmp/checks/album-theme-{light,dark,mobile}.png`。未提交、发布或真机验收，原场景大包提示保留。
+## 相册英文全屏加载页（2026-11-25，本地未发布）
+
+按用户要求，将照片加载中的局部中文提示改为全屏 `Loading photos…`；沿用返回场景的 `#e6e9ec` 背景、`#173d55` 字色、Slime Box 字体与响应字号。加载期间隐藏页头和标题，图片全部解码后再显示相册；原来的失败处理和深链接等待保留。两项相册检查、lint、统一构建通过；1440×900、390×844 浏览器确认全屏加载与就绪后展示，截图 `.tmp/checks/album-loading-screen-{desktop,mobile}.png`。未发布、未做真机验收。
+
+## 相册等待全部照片后展示（2026-11-25，本地未发布）
+
+照片墙从逐张加载改为先展示简洁加载状态，全部图片 `decode()` 完成后统一解除 `aria-busy`、展示照片墙；移除懒加载，避免屏外图片与隐藏网格互相等待。单图直达也等待解码，失败图片显示重试名称而不阻塞其余图片，禁用 JavaScript 时保留原生链接。
+
+15 项检查中其余 14 项通过，阅读器检查修正等待逻辑后复测通过；lint、统一构建通过。新增断言验证部分照片完成时仍隐藏、失败后可展示以及深链接等待。浏览器通过控制 8 张图片解码，确认放行 7 张时仍为加载状态、全部完成后统一显示并打开深链接；另实际拦截一张 JPG 请求验证失败不阻塞。截图 `.tmp/checks/album-loading-{wait,ready}.png`，测试结束已撤销浏览器拦截。未提交、发布或真机验收。
+## COS 原 JPG 直接接入（2026-11-25，本地未发布）
+
+按用户要求，`assets/photos/catalog.json` 改用腾讯 COS 根目录已有的 8 张 JPG，thumb/view 共用原地址，不再要求上传 WebP。放宽清单文件格式至 JPG/PNG/WebP/AVIF，保留 HTTPS、尺寸、唯一 ID 与路径检查，并编码中文文件名；照片 ID、秋季插页与相册往返沿用既有实现。只有照片使用 COS，其他资源保持原静态构建流程，CI 不依赖 personal 原件。
+
+8 张远程 JPG 均为 HTTP 200、内容和尺寸与原件一致且无 EXIF；生产及本机 GET 的 CORS 已生效，HEAD 暂未返回跨域头，当前图片使用 GET。15 项检查、lint、统一构建通过；针对新文件名校验补充中文 JPG 用例并复测。浏览器确认相册 8 张远程 JPG、大图、秋季五张照片正常显示，墙上照片直达对应大图，返回同一场景文档及原滚动位置，标牌打开总览。截图 `.tmp/checks/cos-jpg-{viewer,autumn}.png`；构建照片目录只输出 PhotoSwipe 许可证，无本机图片副本。尚未提交、推送、线上或真机验收，原场景大包提示保留。
+
+## 用户照片与秋季相册互通（2026-11-24，本地未发布）
+
+接入 `assets/photos/personal/` 中 8 张用户 JPG（7 横 1 竖），构建仅读取此目录，9 张网络样片退出输入且保留原文件。相册展示全部 8 张，Vite 虚拟模块向秋季组件提供同一清单的前五张照片；复用缩略图及原插页 UV，等比居中裁切，不重建模型。点击照片、相框或夹子直达对应单图；标牌和绳进入总览，沿用原位置、缩放与 Navigation/BFCache 返回。
+
+15 项检查、lint、统一构建、UI 扫描与 `git diff --check` 通过。照片构建检查新增同源 ID 与排除旧样片验证；8 个原件 SHA-256 全部未变，16 张派生 WebP 均无 EXIF/XMP/IPTC。桌面浏览器从墙上第一张照片打开对应大图、关闭、返回，确认恢复同一场景文档与历史条目，路线 0.86、缩放 1.4、滚动位置保留；标牌进入无锚点总览。390×844 核对原色总览、竖图完整显示、单图直达刷新，无横向溢出，相册无 Canvas 或 iframe。截图 `.tmp/checks/personal-{autumn-desktop,albums-desktop,albums-mobile,portrait-mobile}.png`，原件核对清单 `.tmp/checks/personal-originals.json`。
+
+原件由 Git 忽略，长期存储和 CI 取图方式仍待决定；本机照片不会自动进入 CI 或线上。未提交、推送或发布，未做真实设备、低性能或线上验收；场景既有大包提示保留。
+
+## 大图预览布局精简（2026-11-24，本地未发布）
+
+按用户要求移除大图计数和放大按钮，上一张/下一张移至照片下方，触屏可见，首尾保持禁用状态。预览区上限为视口高度 72%、720px 高和 1040px 宽，保持原比例与暖纸留白；点击及手势缩放、键盘和关闭返回沿用 PhotoSwipe。
+
+15 项检查、lint、统一构建及 UI 扫描通过。浏览器核对 1440×900 横竖照片、390×844 和 320×568 布局、按钮位于照片下方、计数及放大按钮不存在、触屏按钮切图和点击照片缩放；当前预览已刷新。截图 `.tmp/checks/album-layout-{desktop,landscape,mobile}.png`。未做真实设备或线上验收，未提交、推送；场景既有大包提示保留。
+
+## 取消翻页，直接预览大图（2026-11-23，本地未发布）
+
+按用户最新决定移除摄影书页面、翻页脚本、iframe 通信、专用样式、构建入口、版本哈希及 `@gullabs/flipbook-core` 依赖。照片墙保持等高、无分类无相框，桌面黑白悬停/聚焦显色，触屏原色；点图直接按需加载 PhotoSwipe 5.4.4，支持切图、缩放、键盘与触屏，保留深链接和关闭恢复。复用既有暖纸纹及棕色控件，不改动照片原件和场景构图。
+
+新的浏览检查覆盖选中照片、切图地址同步、滚动/焦点恢复、直达刷新、Back/Forward、加载取消及模块失败时的原生图片访问。下方翻页记录仅供历史追溯。
+
+2026-11-24 收尾：15 项 Node 检查、lint、统一构建及 `git diff --check` 通过。浏览器确认按钮与方向键切图、缩放、Esc、单图直达刷新、Back/Forward，以及关闭后非零滚动和原照片焦点恢复；390×844 模拟触屏双向滑动通过，无横向溢出、无 iframe。预览锁定背景滚动，加载大图时先显示已有缩略图。截图为 `.tmp/checks/album-viewer-{desktop,mobile}.png`，构建日志为 `.tmp/checks/album-viewer-build.log`；输出中已无 `/albums/book.html`。既有场景大包提示仍在，未提交或推送；真实照片、长期存储选择、真实手机、低性能设备及线上验收仍待完成。
+
+## 翻页修正与黑白显色（2026-11-23，历史，翻页已放弃）
+
+用户反馈原翻页效果差、照片墙显色前后差异不足。本轮核对以下项目的源码或官方说明：
+
+| 项目 | 核对结果与取舍 |
+| --- | --- |
+| [StPageFlip](https://github.com/Nodlik/StPageFlip) 2.0.7 | 初版所用 MIT 引擎。实际中间帧复现单页回翻时上一页从左侧屏幕外滑入，当前照片基本不动；原帧记录 `.tmp/checks/album-turn-before-{early,middle,late}.png`。 |
+| [gul-labs/flipbook](https://github.com/gul-labs/flipbook) | 采用其无框架依赖的 `@gullabs/flipbook-core` 3.2.2，直接替换原依赖。修正当前页回卷、纸背不透明、翻页时长及空闲 RAF；未修改第三方源码。完整 MPL-2.0 与上游 MIT 许可、源码地址随构建发布于 `/album-assets/flipbook-core-license.txt`。 |
+| [flipbook-vue](https://github.com/ts1/flipbook-vue) | MIT，使用分片透视与光照表现纸页，要求统一页比例并依赖 Vue；当前独立页面沿用已有架构，未接入。 |
+| [Turn.js](https://github.com/blasten/turn.js) | 旧版依赖 jQuery，仓库许可限制非商业用途；未接入或复制代码。 |
+
+摄影书沿用现有纸色、字体、页面及缩放层；翻页设为 820ms、最大阴影透明度 0.28，回翻改为卷起当前纸页，露出目标照片。移除旧版 `page-flip` 依赖声明，按新 API 同步事件与尺寸更新；新引擎自行遵循减少动态效果设置。总览改为 CSS `grayscale(1)`，悬停或键盘焦点用 `grayscale(0)` 恢复原色，过渡 220ms，触屏保持原色；源照片不变。
+
+验证同时发现固定阅读页地址会命中旧 HTML 缓存，故构建从阅读 HTML、脚本、样式及锁文件生成版本哈希，父页用带版本的 iframe 地址打开。自动检查覆盖阅读版本变化、许可证发布及原有地址/返回契约；15 项检查、lint、统一构建通过。当前摄影书脚本 gzip 约 21.07 kB，仅点开后加载；场景既有大包提示仍在。
+
+新旧中间帧对照确认翻页主体与纸背改变，新帧 `.tmp/checks/album-turn-core-{early,middle,late}.png`；黑白总览 `.tmp/checks/album-bw-wall-desktop.png`，390px 阅读页 `.tmp/checks/album-turn-mobile.png`。浏览器验证桌面按钮前后翻页、悬停及 Tab 显色、390px 窗口重排、快速左右触滑、缩放与分层 Esc、减少动态效果时即时切页、Back/Forward；关闭后 iframe 为 0、手机总览原色且无横向溢出。构建日志 `.tmp/checks/album-turn-build.log`。未做真实手机、低性能设备或线上验收，未提交、推送；下节保留初版过程，现役引擎与显色规则以本节及 `docs/design.md` 为准。
+
+## 照片墙与摄影书（2026-11-23，历史，翻页已放弃）
+
+按用户确认的方案，将分组网格收为无分类、无相框的等高照片墙；总览与摄影书复用博客字体、纸纹、暖纸及棕色控件。翻页采用 [StPageFlip / page-flip](https://github.com/Nodlik/StPageFlip) 2.0.7（MIT），按需加载，完整许可随构建输出至 `/album-assets/page-flip-license.txt`。PhotoSwipe 5.4.4 保留为按需缩放层，不承担摄影书翻页；sharp 与照片处理规则不变。PageFlip 的销毁不会取消其内部 RAF，故使用按需同源阅读文档，关闭时移除 iframe，停止该文档的循环。
+
+15 项 Node 检查、lint、统一静态构建与 `git diff --check` 通过，UI 检测器返回空列表。新增阅读器检查覆盖当前照片入口、消息来源及 ID 验证、关闭生命周期、焦点/滚动恢复、刷新与前进后退；9 张本机示例的 SHA-256 与来源清单一致，未修改源照片。相册入口脚本 gzip 约 1.27 kB，摄影书按需脚本约 12.31 kB，PhotoSwipe 核心约 17.42 kB；既有场景大包提示仍在。
+
+以 `dist/` 普通静态服务验证：1440×900 和 390×844 的总览/阅读布局，混合横竖图完整显示，桌面按钮/方向键、模拟双向触屏翻页、窗口尺寸变化、缩放及分层 Esc、单图直达/刷新、Back/Forward、关闭后非零滚动及焦点恢复；另核对 320px 无横向溢出与 Tab 聚焦显色。关闭后 iframe 数为 0，独立相册未请求场景脚本或 GLB。截图为 `.tmp/checks/albums-{wall,book}-{desktop,mobile}-final.png`，构建记录 `.tmp/checks/album-book-build.log`。独立复核初审只要求同步现役设计文档，修复后 verdict 为 resolved、remaining clear，最终 disposition 为 ship；现役契约见 `docs/design.md`。
+
+本机仍为 9 张 Pexels 示例，未接入用户真实照片，未决定长期存储；真实手机、低性能设备、完整慢网/断网与线上未验收。本轮未提交或推送，未修改生产配置。
+
+## 独立相册（2026-11-21，本地未发布）
+
+相册大图使用 [PhotoSwipe](https://photoswipe.com/) 5.4.4（MIT），浏览器包按需加载，构建同时发布 `/album-assets/photoswipe-license.txt` 完整许可。照片处理使用 sharp 0.35.5（Apache-2.0），仅在 Node 构建阶段运行；版本与间接依赖由 `package-lock.json` 锁定。纸纹、Slime Box 字体及回声图标复用现有博客资产，没有新增摄影示例素材；真实照片尚未提供。
+
+本地验证：14 项 Node 检查、lint 和统一构建通过；Windows 部署检查通过 2 项，跳过 2 项 Linux 专用检查。照片检查覆盖分组排序、方向、去元数据、原图字节保留、缓存、HTML 转义、损坏图片失败及 Vite 发布资源。桌面/390px 浏览器验证空状态、测试夹具的原比例网格、单图直达刷新、缩放、键盘切图/Esc、模拟触屏滑动和关闭后焦点；秋季照片墙点击及键盘入口可用，返回命中原文档并保留路线 0.86、缩放 1.4。UI 独立复核结论为 ship，无待修实质项；真实照片、真机与低性能、线上未验收。
+
+截图在 `.tmp/preview/albums-{empty-desktop,empty-mobile,fixture-desktop,fixture-mobile,viewer-current-mobile,autumn-entry}.png`；测试图片显式标注 TEST FIXTURE，仅本机 QA 服务可见，未进入 `dist/`。主场景既有大包提示仍在，相册入口脚本 gzip 约 6.1 kB，大图核心按需加载 gzip 约 17.4 kB。本次不提交、不推送、不改线上服务。
+
 ## 项目目录整理（2026-11-21，本地未发布）
 
 运行代码按 `src/ui/`、`src/scene/`、`src/stores/` 划分；四季场景各自归入 seasons，四季男孩与共用纸片组件放 characters。构建、美术、部署工具及检查按职责分组。专题文档集中于 docs，根 README 提供目录和命令入口，AGENTS 只保留开发边界。

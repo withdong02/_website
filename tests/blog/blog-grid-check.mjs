@@ -95,3 +95,18 @@ for (const options of [{ reduced: true }, { fine: false }]) {
   assert.equal(staticGrid.canvas.width, 780, 'Static grid must follow resize');
 }
 console.log('Blog grid passed: pointer deformation, spring settling, idle, themes, visibility, static fallback and DPR.');
+
+const themeScript = readFileSync(new URL('../../blog/assets/js/theme.js', import.meta.url), 'utf8');
+for (const denied of [false, true]) {
+  let theme = 'dark', saved;
+  const button = events({setAttribute(name,value) {this[name]=value;}});
+  vm.runInNewContext(themeScript, {
+    document: {querySelector:()=>button,documentElement:{getAttribute:()=>theme,setAttribute:(_,value)=>{theme=value;},removeAttribute:()=>{theme=null;}}},
+    localStorage: {setItem(_,value) {if(denied)throw Error('Storage denied');saved=value;}},
+  });
+  assert.equal(button['aria-pressed'],true);
+  button.fire('click'); assert.equal(theme,null); assert.equal(button['aria-pressed'],false);
+  if(!denied) assert.equal(saved,'light');
+  button.fire('click'); assert.equal(theme,'dark');
+  if(!denied) assert.equal(saved,'dark');
+}

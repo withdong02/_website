@@ -68,6 +68,6 @@ jobs:
             ubuntu@124.221.38.221 "deploy $GITHUB_SHA $GITHUB_RUN_ID $GITHUB_RUN_ATTEMPT" < .tmp/deploy/site.tar.gz
       - name: Verify public site
         run: |
-          for route in / /posts/ /tags/ /categories/ /archives/; do
+          for route in / /posts/ /tags/ /categories/ /archives/ /albums/; do
             curl --fail --silent --show-error --retry 3 --max-time 30 "https://blog.withdong02.top$route" -o /dev/null
           done

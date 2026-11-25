@@ -18,7 +18,7 @@ async function checkHistoryReturn({ entries, saved = '{"entryKey":"scene"}', una
   const calls = [];
   const link = { href: 'https://example.com/?resume=blog', addEventListener: (_, callback) => { click = callback; } };
   runInNewContext(returnScript, {
-    document: { querySelector: () => link }, URL,
+    document: { querySelectorAll: () => [link] }, URL,
     location: { origin: 'https://example.com', assign: url => calls.push(url) },
     sessionStorage: { getItem: () => saved },
     window: { navigation: unavailable ? undefined : {

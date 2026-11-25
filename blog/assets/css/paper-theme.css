@@ -1,0 +1,63 @@
+/* Summer-scene paper and sea-blue ink, keeping Notebook's reading structure. */
+:root {
+  color-scheme: light;
+  --paper: #e7edef;
+  --card: #fbf6ea;
+  --ink: #173d55;
+  --ink-soft: #51636a;
+  --summary: #465b63;
+  --margin: #173d55;
+  --accent: #173d55;
+  --line: #c8d4d7;
+  --dash: #b5c4c8;
+  --card-border: #d6cebb;
+  --code-border: #d6cebb;
+  --tape: #e9e4d8;
+  --hl: rgba(197, 161, 99, 0.16);
+  --hl-strong: rgba(197, 161, 99, 0.3);
+  --fold: #d5c5a9;
+  --paper-edge: #b8c7c9;
+  --paper-shadow: rgba(23, 61, 85, 0.13);
+  --paper-wash: rgba(251, 246, 234, 0.88);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #142d39;
+  --card: #213e4b;
+  --ink: #f1e8d7;
+  --ink-soft: #c0c9c5;
+  --summary: #d0d5cb;
+  --margin: #ddc49e;
+  --accent: #ddc49e;
+  --line: #32525d;
+  --dash: #59717a;
+  --card-border: #49626a;
+  --code-border: #49626a;
+  --tape: #142d39;
+  --hl: rgba(221, 196, 158, 0.16);
+  --hl-strong: rgba(221, 196, 158, 0.32);
+  --fold: #41616c;
+  --paper-edge: #0f2530;
+  --paper-shadow: rgba(0, 0, 0, 0.2);
+  --paper-wash: rgba(33, 62, 75, 0.9);
+}
+body { background-image: none; }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--paper-texture);
+  background-size: 256px;
+  mix-blend-mode: multiply;
+  opacity: 0.24;
+  pointer-events: none;
+}
+#starfield-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}

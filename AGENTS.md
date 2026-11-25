@@ -5,7 +5,7 @@
 - 个人四季纸艺网站，基于 `andrewwoan/aimee-xus-papercraft-world`；React、React Three Fiber、Three.js、GSAP 版本以锁文件为准，上游来源与许可证见 `docs/upstream.md`。
 - 原博客 `D:\Blog` 只读。迁移只复制和核对，不移动、删除、修改原文件，不复制旧站密钥或部署配置。新站须能独立构建，正文继续由本仓库 Hugo 渲染。
 - 首页重场景探索，正文重阅读；保留真实地址、历史、返回位置与缩放，不将完整内容画到三维贴图。用户已确认首页和博客按当前范围基本完成；阶段、下一步与未验收项以 `docs/migration.md` 为准。
-- 春季默认进入，夏季四入口已接通；秋季照片墙素材已完成，独立相册入口后续接入，真实照片待提供；春季音乐、冬季留言联系尚待接入，未实现入口不得伪装为可用。四季路线、人物比例与纸片风格以 `docs/design.md` 为准，修改美术前读取相关段落。
+- 春季默认进入，夏季四入口已接通；秋季照片墙与 `/albums/` 共用用户照片，插页直达对应大图、标牌进入总览；8 张照片已通过 COS JPG 接入，本地验证通过、尚未发布。春季音乐、冬季留言联系尚待接入，未实现入口不得伪装为可用。四季路线、人物比例与纸片风格以 `docs/design.md` 为准，修改美术前读取相关段落。
 - 四季小男孩保留六版姿态、表情、分层、眨眼、步行与车轮枢轴；不得用整张静态人物替代。回声为湖蓝纸艺摆件、原不规则轮廓与胶囊双眼，不增加嘴、手脚或分离交互。几何检查通过不等于美术或真机验收通过。
 - 由自有 Nginx 托管静态 `dist/`，生产机不运行 Vite。用户已持续授权每次推送 main 自动检查、构建、上线，无需重复确认；超出现役发布流程的生产配置修改另行授权。入口与回滚见 `docs/deployment.md`。
 
@@ -23,7 +23,10 @@
 | `public/draco/` | 与锁定 Three.js 一致的 Draco 解码器及许可证；更新依赖时核对版本与哈希 |
 | `assets/blender/` | 上游 Blender 文件和插件，保留文件名与来源，不发布 |
 | `assets/source/` | 仅供美术重建使用的模型、贴图及图形源文件；仍被运行时共用的原模型和图集只在 public 保留一份 |
-| `blog/` | 独立 Hugo 源码与文章；主题在 themes/notebook 锁定，站点覆盖放 layouts 和 assets，不直接改主题副本 |
+| `assets/photos/` | 用户照片或明确授权的网络示例接入时创建；来源记录在 docs，页头不显示示例标记；原图只读保留，子目录仅组织源文件，前台不分类；仅 JPG、PNG、WebP、AVIF，按目录及文件名排序，不推断日期地点。当前按用户要求直接使用 COS 中已有 JPG，不强制转换 WebP；本机预览示例不提交、不随 main 发布 |
+| `assets/photos/personal/`、`assets/photos/catalog.json` | personal 为用户原件的本机目录，原件不修改且由 Git 忽略；catalog 为可提交的远程照片清单，存在时优先使用，CI 无需原件，不运行时列举存储桶。当前 thumb/view 均指向 COS 根目录已有 JPG，文件名编码后访问；只有照片放 COS，其他资源沿用静态构建。相册展示全部照片，秋季五张插页使用同一清单前五张，墙面 UV 等比裁切；点击插页直达对应大图，标牌进入总览，不改变场景几何或路线 |
+| `albums/`、`src/ui/albums/` | 独立相册入口、浏览脚本和样式；点击照片按需打开 PhotoSwipe 大图，支持缩放、切图和关闭恢复；不保留摄影书、翻页引擎或 iframe 阅读页，不加载三维场景；照片处理在 `scripts/build/`，沿用 `tests/build/` 检查 |
+| `blog/` | 独立 Hugo 源码与文章；主题在 themes/notebook 锁定，站点覆盖放 layouts 和 assets，不直接改主题副本。博客和相册共用 assets/css/paper-theme.css 配色纸纹与格子层、assets/js/theme.js 主题切换及 starfield.js 格子背景；相册不加载微型四季场景 |
 | `scripts/assets/` | 美术生成器与共用几何工具，仅手动重建时运行 |
 | `scripts/build/`、`scripts/deploy/` | 统一静态构建与部署工具；服务器安装入口保持既有绝对路径 |
 | `tests/scene/`、`tests/blog/`、`tests/build/`、`tests/deploy/` | 按场景、博客、集成构建、部署职责组织已有检查 |

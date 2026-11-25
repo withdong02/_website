@@ -23,21 +23,7 @@
     {{ $drift := resources.Get "js/echo-drift.js" | resources.Copy "blog-assets/js/echo-drift.js" | minify | fingerprint }}
     <script src="{{ $drift.RelPermalink }}" integrity="{{ $drift.Data.Integrity }}" defer></script>
   {{ end }}
-  <script>
-    (function () {
-      var btn = document.querySelector(".theme-toggle");
-      if (!btn) return;
-      btn.addEventListener("click", function () {
-        var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-        if (isDark) {
-          document.documentElement.removeAttribute("data-theme");
-          try { localStorage.setItem("theme", "light"); } catch (e) {}
-        } else {
-          document.documentElement.setAttribute("data-theme", "dark");
-          try { localStorage.setItem("theme", "dark"); } catch (e) {}
-        }
-      });
-    })();
-  </script>
+  {{ $theme := resources.Get "js/theme.js" | resources.Copy "blog-assets/js/theme.js" | minify | fingerprint }}
+  <script src="{{ $theme.RelPermalink }}" integrity="{{ $theme.Data.Integrity }}" defer></script>
 </body>
 </html>

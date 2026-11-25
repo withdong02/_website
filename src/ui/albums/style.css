@@ -1,0 +1,47 @@
+@import '../../../blog/assets/css/paper-theme.css';
+@font-face { font-family: "Slime Box"; src: url("../../../blog/assets/fonts/slime-box.woff2") format("woff2"); font-display: swap; }
+:root { --page: var(--card); --soft: var(--ink-soft); --edge: var(--line); --paper-texture: url("../../../blog/assets/images/paper.webp"); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--paper); }
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+html:has(.pswp--open) { overflow: hidden; }
+body { margin: 0; min-width: 280px; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+.album-page { position: relative; z-index: 1; max-width: 1320px; padding: 0 40px 64px; margin: auto; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
+.theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; color: var(--soft); cursor: pointer; }
+.theme-toggle:hover { color: var(--ink); }
+.theme-toggle .icon { width: 18px; height: 18px; }
+.theme-toggle .icon--sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon--sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon--moon { display: none; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 112px; border-bottom: 1px solid var(--edge); }
+.site-name { font: 30px "Slime Box", sans-serif; }
+.scene-return svg { width: 24px; height: 24px; }
+.scene-return { display: grid; place-items: center; width: 44px; height: 44px; color: var(--soft); }
+.page-heading { display: flex; align-items: baseline; gap: 18px; margin: 0; padding: 48px 0 40px; font: 64px/1.1 "Slime Box", sans-serif; }
+.photo-grid { --row-height: 235px; display: flex; flex-wrap: wrap; gap: 22px; }
+.photo-grid[aria-busy="true"] { display: none; }
+.album-loading { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 100; display: grid; place-items: center; margin: 0; background: var(--paper); color: var(--ink); font: clamp(18px, 4vw, 24px) "Slime Box", sans-serif; }
+body:has(.album-loading) .site-header, body:has(.album-loading) .page-heading, body:has(.album-loading) .skip-link { visibility: hidden; }
+.photo-grid::after { content: ""; flex: 99999 1 0; }
+.photo { display: block; min-width: 0; max-width: 100%; flex: calc(var(--photo-ratio) * 100) 1 calc(var(--photo-ratio) * var(--row-height)); cursor: zoom-in; }
+.photo img { display: block; width: 100%; height: auto; aspect-ratio: var(--photo-ratio); background: var(--edge); }
+.empty-state { min-height: 390px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 0 56px; text-align: center; }
+.empty-frame { display: block; width: 76px; height: 62px; border: 8px solid var(--page); border-bottom-width: 16px; box-shadow: 0 3px 8px #63452e15; background: #e5dac5; margin-bottom: 28px; }
+.empty-state h2 { margin: 0; font-size: 20px; font-weight: 500; }
+.skip-link { position: absolute; z-index: 20; top: 8px; left: 16px; padding: 12px; background: var(--page); transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+.image-failed img { min-height: 160px; font-size: 14px; color: var(--ink); }
+.pswp { --pswp-bg: var(--paper); --pswp-icon-color: var(--ink); --pswp-icon-color-secondary: var(--card); --pswp-error-text-color: var(--ink); }
+.pswp__img--placeholder { background: var(--paper); }
+.pswp__bg::before { content: ""; position: absolute; inset: 0; background: var(--paper-texture) repeat; background-size: 256px; opacity: .17; mix-blend-mode: multiply; }
+.pswp .pswp__button--arrow { top: auto; bottom: max(env(safe-area-inset-bottom), calc((100% - min(72vh, 720px)) / 2 - 40px)); width: 44px; height: 44px; margin: 0; visibility: visible; }
+.pswp .pswp__button--arrow--prev { left: calc(50% - 60px); right: auto; }
+.pswp .pswp__button--arrow--next { left: calc(50% + 16px); right: auto; }
+.pswp .pswp__button--arrow .pswp__icn { width: 44px; height: 44px; top: 0; left: 0; right: auto; margin: 0; }
+.pswp .pswp__button--arrow:disabled { display: block; opacity: .25; }
+@media (hover: hover) and (pointer: fine) { .photo img { filter: grayscale(1); transition: filter 220ms ease-out; } .photo:hover img, .photo:focus-visible img { filter: grayscale(0); } }
+@media (max-width: 800px) { .photo-grid { --row-height: 210px; gap: 18px; } }
+@media (max-width: 520px) { .album-page { padding-inline: 22px; } .site-header { min-height: 88px; gap: 12px; } .site-name { font-size: 25px; } .page-heading { padding-top: 36px; font-size: 48px; } .photo-grid { --row-height: 140px; gap: 12px; } .empty-state { min-height: 350px; } }
+@media (prefers-reduced-motion: reduce) { .photo img { transition: none; } .pswp { --pswp-transition-duration: 0ms; } }

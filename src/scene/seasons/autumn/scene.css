@@ -1,0 +1,2 @@
+.autumn-album-link { display: block; width: 96px; height: 52px; border-radius: 4px; }
+.autumn-album-link:focus-visible { outline: 3px solid #fff5df; outline-offset: 4px; background: #69422580; }

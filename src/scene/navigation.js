@@ -22,7 +22,7 @@ export function parseSceneReturn(value) {
 
 export const sceneReturn = (() => {
   if (typeof window === "undefined") return null;
-  if (new URLSearchParams(window.location.search).get("resume") !== "blog" && !window.history.state?.blogReturn) return null;
+  if (!["blog", "albums"].includes(new URLSearchParams(window.location.search).get("resume")) && !window.history.state?.blogReturn) return null;
   try { return parseSceneReturn(window.sessionStorage.getItem(storageKey)); }
   catch { return null; }
 })();

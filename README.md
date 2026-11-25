@@ -98,6 +98,12 @@ Start-Process -FilePath (Get-Command hugo).Source `
 
 `npm run build` 先将 Vite 与 Hugo 构建到新的 `.tmp/builds/site-*/`，校验冲突后合并成 `dist/`。场景占 `/index.html`，Hugo 保留文章与分类等历史路径、RSS 和 sitemap，资源集中于 `/blog-assets/`；旧首页 `/page/N/` 转到 `/posts/page/N/`。旧 `dist/` 留存在对应暂存目录的 `previous-dist/`，不批量删除。用 `python -m http.server 4173 --bind 127.0.0.1 --directory dist` 验证独立静态包；静态托管应按真实文件返回，不能用场景首页兜底博客深链接。生产构建使用 `https://blog.withdong02.top/`，仅非 production 环境保留 `noindex`；开发命令仍覆盖为本机地址。搜索、评论尚未接入。
 
+## 相册维护
+
+独立相册位于 `/albums/`，秋季照片墙与标牌进入同一页面。等高照片墙提供总览，点击照片直接预览大图，支持切图、缩放和返回原位置。没有照片时显示空状态；本机网络样片统一标注“示例”。来源、存储与图片链接见 [素材与重建](docs/assets.md#相册照片)。
+
+当前直接使用 COS 中的 JPG，照片地址、尺寸及稳定 ID 维护在 `assets/photos/catalog.json`；新增照片上传 COS 后更新清单，再执行 `npm run build`。原件在 `assets/photos/personal/` 只读保留且由 Git 忽略，CI 无需原件。秋季墙使用清单前五张，照片直达对应大图，标牌进入总览，无需 Blender。只有照片放 COS，其他资源照旧构建；格式及 CORS 约定见 `docs/assets.md`。
+
 ## 静态预览与部署
 
 ```powershell

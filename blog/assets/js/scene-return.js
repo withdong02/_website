@@ -1,6 +1,5 @@
 (() => {
-  const link = document.querySelector('.back-to-scene');
-  link?.addEventListener('click', event => {
+  document.querySelectorAll('.back-to-scene').forEach(link => link.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     try {
       const saved = JSON.parse(sessionStorage.getItem('paper-scene-return'));
@@ -19,5 +18,5 @@
     } catch {
       if (event.defaultPrevented) location.assign(link.href);
     }
-  });
+  }));
 })();

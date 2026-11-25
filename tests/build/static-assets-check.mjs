@@ -36,6 +36,7 @@ async function visit(file) {
   }
 }
 await visit(path.join(root, "src/main.jsx"));
+await visit(path.join(root, "src/ui/albums/main.js"));
 const sourceFiles = (await files(path.join(root, "src"))).filter(file => /\.(jsx?|css)$/.test(file));
 for (const file of sourceFiles) assert(sources.has(file), `Unreachable runtime source: ${path.relative(root, file)}`);
 let references = 0;

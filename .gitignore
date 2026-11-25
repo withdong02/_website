@@ -31,3 +31,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Downloaded landscape samples are only for local album preview.
+assets/photos/*（示例）/
+
+# Personal originals stay local while photo storage is undecided.
+assets/photos/personal/

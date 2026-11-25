@@ -35,7 +35,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="{{ $favicon.RelPermalink }}">
 {{ end }}
 
-{{ $css := slice (resources.Get "css/notebook.css") (resources.Get "css/site.css") (resources.Get "css/echo-drift.css") | resources.Concat "blog-assets/css/notebook-site.css" | minify | fingerprint }}
+{{ $css := slice (resources.Get "css/notebook.css") (resources.Get "css/paper-theme.css") (resources.Get "css/site.css") (resources.Get "css/echo-drift.css") | resources.Concat "blog-assets/css/notebook-site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 {{ $paper := resources.Get "images/paper.webp" | resources.Copy "blog-assets/paper.webp" | fingerprint }}
 {{ $displayFont := resources.Get "fonts/slime-box.woff2" | resources.Copy "blog-assets/slime-box.woff2" | fingerprint }}

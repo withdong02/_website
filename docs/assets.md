@@ -2,6 +2,32 @@
 
 源文件在 `assets/`，发布资源在 `public/`，生成工具在 `scripts/assets/`。源模型和贴图保留原始字节；运行时也使用的上游文件继续共用 `public/` 中的一份。
 
+## 相册照片
+
+相册和博客的背景配色、纸纹及格子层共用 `blog/assets/css/paper-theme.css`；格子运行脚本复用 `blog/assets/js/starfield.js`，主题按钮复用 `blog/assets/js/theme.js`，共用 localStorage 的 theme。Hugo 与 Vite 分别构建同一来源，不加载微型四季的脚本或图集。
+
+2026-11-25 当前方案：按用户要求直接使用 `website-albums-1356670526.cos.ap-nanjing.myqcloud.com` 根目录已有的 8 张 JPG；不要求上传 WebP，不启用在线图片处理。`assets/photos/catalog.json` 保存稳定 ID、文件名、尺寸与 HTTPS 基址，thumb/view 指向同一 JPG，访问时编码中文文件名。相册与秋季组件共用清单；CI 构建仅读取清单，不依赖原件或下载图片，不复制远程照片到 dist。只有照片使用 COS；模型、字体、纸纹等随既有静态构建发布。
+
+实测 8 张 JPG 均返回 200，字节及尺寸与本机原件一致，无 EXIF；生产域名与 `http://127.0.0.1:5175` 的 GET 跨域已生效。浏览器确认相册 8 张远程 JPG、大图、秋季墙加载与往返；HEAD 未返回跨域头，不影响当前图片 GET 加载。新增照片时上传 JPG，并在 catalog 中补充文件名、尺寸和唯一 ID，原件本地保留；移动已有文件需同步清单。尚未提交、上线或真机验收。
+
+以下为本地处理与早期 WebP 上传准备记录，WebP 上传方案已放弃，无需使用上传包。
+
+2026-11-22 用户授权下载网络照片预览：`assets/photos/` 放入 Pexels 风景照片 9 张，分为“山湖（示例）”“森林（示例）”“海岸（示例）”，各 3 张。均为网站提供的 2400px 宽下载版本，合计约 7.52 MiB，不声称全分辨率原片或用户摄影。来源页面、作者、许可、下载地址、尺寸及 SHA-256 记录在 `docs/album-samples.json`；许可为 [Pexels License](https://www.pexels.com/license/)。三个示例目录由 `.gitignore` 排除，只用于当时的本机预览；2026-11-24 已退出构建输入，文件保留，未提交或发布。
+
+用户当前投放目录为 `assets/photos/personal/`（2026-11-24 指定），已收到 8 张 JPG，7 横 1 竖。构建仅读取此目录，相册中的 9 张网络样片已退出现役输入，旧示例目录留在本机且不删除。原件由 Git 忽略，长期存储及 CI 取图方式待确定。原图只读保留，源文件保留原名。子目录仅用于整理源文件，页面将全部照片合为一面等高照片墙，不显示分类；构建按目录、文件名自然排序。支持 JPG/JPEG、PNG、WebP、AVIF；不读取外部符号链接，损坏的支持格式图片会使构建失败并指出文件。HEIC、RAW、视频需先由用户另存为支持格式。
+
+Vite 的 `virtual:album-photos` 向秋季组件提供同一清单的前五张照片（当前均为横图），复用 640px 缩略图；固定插页通过 UV 居中等比裁切，不拉伸、不改变模型和原图。点击照片、相框或夹子进入 `/albums/#photo=<id>` 对应大图；标牌、绳保留 `/albums/` 总览入口，原有场景位置与缩放恢复继续使用。
+
+`scripts/build/album-photos.mjs` 在 Vite 启动/构建时读取照片，自动校正 EXIF 方向，生成最长边 640px 的缩略图和 2560px 的浏览图（不放大小图），不保留 EXIF/GPS 等元数据；原件不发布。处理缓存位于 `.tmp/cache/albums/`，内容哈希参与生成资源名，发布路径为 `/album-assets/`。图片变更后重新启动开发服务；生产沿用 `npm run build` 和现有发布流程。源码目录需随发布源码提供给 CI，单独保留本机文件不会自动上传到服务器。
+
+`albums/index.html` 与 `src/ui/albums/` 复用博客纸纹、字体及返回脚本。单图地址 `/albums/#photo=…` 支持复制、直达和刷新；图片 ID 由相对路径决定，重命名或移动文件会改变对应地址。文件名仅用于 alt 和链接可访问名称，不推断拍摄时间、地点或故事。桌面总览默认黑白，悬停或键盘聚焦恢复原色，触屏默认原色；效果仅由 CSS 控制，不改写照片文件。
+
+点击照片按需加载 PhotoSwipe 大图预览，保持原比例完整显示，支持左右切图、双击/捏合缩放、拖动查看、方向键与 Esc。关闭后恢复照片墙的滚动位置和焦点；相邻大图由 PhotoSwipe 按需预加载。摄影书入口、翻页引擎、iframe、专用样式与阅读版本哈希已移除，不加载三维资源，不承诺原图下载。
+
+2026-11-24 用户指定腾讯 COS 域名 `website-albums-1356670526.cos.ap-nanjing.myqcloud.com`。`assets/photos/catalog.json` 保存 HTTPS 图片目录、稳定 ID、标题、尺寸及缩略图/浏览图文件名；清单存在时构建优先读取，CI 无需本机原件，也不列举存储桶，不向 `dist/` 复制远程照片。没有清单时保留本地目录构建。只有相册照片（含秋季墙共用的缩略图）放 COS，模型、纸纹、字体等继续随现有静态构建发布。
+
+当前 16 张去元数据 WebP 的上传目录为 `D:\_website\.tmp\deploy\album-upload\album-assets`，压缩包为 `.tmp/deploy/album-upload.zip`；须上传到桶的 `album-assets/` 前缀，保留文件名。已确认桶根目录的一张用户 JPG 可读，桶目录列表为 403，无需开放匿名列举。WebP 上传、生产域名及本机 Origin 的 CORS、生效后的浏览器与 CI 构建仍待验收，当前不能声明远程接入完成。
+
 ## 素材链路
 
 首页加载头像由 `scripts/assets/build-loading-art.py` 从现有春季男孩正面头脸渲染为透明的 `public/images/loading-boy{,-smile}.webp`，保留原角色模型、图集和分层。脚本复用开场原有纸纹及实际背板色 `#173d55`、`#c18424` 生成 `loading-summer.webp`、`loading-autumn.webp`；冬季与春季分别沿用 `white.webp`、`green.webp`。旧女生头像保留在 `assets/source/images/`，不再发布。仅手动美术重建时通过 Blender 运行，依赖本机 Python 与 Pillow，不加入日常构建。
@@ -28,7 +54,7 @@ Articles 第一页及 Tags、Categories、Archives 总览的导航下方使用�
 
 冬季来信素材由 `scripts/assets/build-winter-letters.py` 生成独立的 `public/models/winter-letters.glb`、`public/textures/winter-contact-label.webp` 与 `public/textures/winter-snow-wall.webp`，运行组件 `src/scene/seasons/winter/scene.jsx` 替换原冬季挂载位。复用原四张图集中的纸纹、积雪及配景，背板以连续世界空间纸纹和实际灰度遮挡重新烘焙为雪白，地面通过线性材质增益提亮，暖木墙与门保留原 UV 和烘焙层次，窗格与门灯为暖黄色薄纸件；邮筒立在最低台阶地面，已按用户反馈绕底部放大 40%，标牌严格为 `contact me`，字号由 136 增至 174，尚未接页面前不设假链接。早期中间图集 `winter-letters-wall.webp` 已退出发布目录，运行背板使用生成器烘焙的 `winter-snow-wall.webp`；生成时检查 UV 接缝两侧颜色，避免提亮蓝色图集造成竖向色差。原图集、模型作为重建输入保留，男孩动作保持现有实现，鹿头、三层火苗、音符和雪人手臂沿用原九个动画枢轴及参数。轻雪由 `src/scene/seasons/winter/snowfall.jsx` 的 56 个薄纸实例绘制，落点与循环由 `src/scene/seasons/winter/snowflake.js` 计算，限定在冬季区域；离开该区域、打开信息面板或页面隐藏时停止更新，系统减少动态效果开启时隐藏。模型采用现有本地 Draco 解码链路。
 
-金秋庭院由 `scripts/assets/build-autumn-album.py` 生成独立的 `public/models/autumn-album-sample.glb` 与 `public/textures/autumn-album-sample.webp`，运行组件仍为 `src/scene/seasons/autumn/scene.jsx`。用户于 2026-11-11 确认重新构图：树间两道照片绳、五张独立插页作为统一照片墙入口造型；移除圆窗、圆月、相册台和悬空单张照片，改用侧后方小方窗。同日预览后要求增加落叶、降低树高、恢复地面展开大书，在左右页分别写简短场景文案，并补少量动物；天花板用少量纸鹤替换旧灯笼空线。当前选用两只薄纸松鼠、两簇蘑菇与三只折纸鹤，长椅和低矮植物继续作配景。保留琥珀金纸纹、台阶及原角色动作；允许男孩在画面中自然遮挡照片和树，其他季节也按此前后层次原则处理，只避免实际三维穿插，不强制将所有物件抬到男孩上方。`public/textures/autumn-photo-previews.webp` 是内置 imagegen 生成并固定保存的风景示意图集，不代表用户真实照片；`photoUrls` 可逐张替换，兼容原 `photoUrl`。五图与书页文字保留独立 UV，文案为 `Golden leaves, quiet days.` 和 `Little moments, kept here.`，字形图集由生成器输出到 `public/textures/autumn-book-text.webp`；竖屏不得单独搬走插页使其脱离绳和树。原 GLB、图集和 Blender 源文件完整保留为重建输入；独立相册与真实照片后续接入，当前照片墙不设可用入口。
+金秋庭院由 `scripts/assets/build-autumn-album.py` 生成独立的 `public/models/autumn-album-sample.glb` 与 `public/textures/autumn-album-sample.webp`，运行组件仍为 `src/scene/seasons/autumn/scene.jsx`。用户于 2026-11-11 确认重新构图：树间两道照片绳、五张独立插页作为统一照片墙入口造型；移除圆窗、圆月、相册台和悬空单张照片，改用侧后方小方窗。同日预览后要求增加落叶、降低树高、恢复地面展开大书，在左右页分别写简短场景文案，并补少量动物；天花板用少量纸鹤替换旧灯笼空线。当前选用两只薄纸松鼠、两簇蘑菇与三只折纸鹤，长椅和低矮植物继续作配景。保留琥珀金纸纹、台阶及原角色动作；允许男孩在画面中自然遮挡照片和树，其他季节也按此前后层次原则处理，只避免实际三维穿插，不强制将所有物件抬到男孩上方。`public/textures/autumn-photo-previews.webp` 是内置 imagegen 生成并固定保存的风景示意图集，不代表用户真实照片；`photoUrls` 可逐张替换，兼容原 `photoUrl`。五图与书页文字保留独立 UV，文案为 `Golden leaves, quiet days.` 和 `Little moments, kept here.`，字形图集由生成器输出到 `public/textures/autumn-book-text.webp`；竖屏不得单独搬走插页使其脱离绳和树。原 GLB、图集和 Blender 源文件完整保留为重建输入；当前照片墙已统一接通独立相册，真实照片待提供。
 
 ## 场景资源重建与检查说明
 
@@ -98,7 +124,7 @@ Vite 的主包体积提醒针对单个精简后的 JavaScript 文件，按 gzip 
 & 'D:\Blender Foundation\Blender 5.2\blender.exe' --background --factory-startup --disable-autoexec --python-exit-code 1 --python scripts/assets/build-autumn-album.py
 ```
 
-生成 `public/models/autumn-album-sample.glb`、`public/textures/autumn-album-sample.webp`、标牌 `autumn-gallery-label.webp` 与书页文字 `autumn-book-text.webp`。当前为树间照片绳庭院，配地面展开书、落叶、纸松鼠及天花纸鹤；五张插页各有独立整图 UV，书页文字也独立于纸纹。运行组件 `src/scene/seasons/autumn/scene.jsx` 的 `photoUrls` 按顺序替换，原 `photoUrl` 仍可统一替换，不需要重烘焙底景。默认使用固定保存的 `public/textures/autumn-photo-previews.webp` 风景示意图集（内置 imagegen 生成，非用户真实照片；重建脚本不重新生成该图集）。入口造型尚未连接独立相册页，真实照片仍待接入。
+生成 `public/models/autumn-album-sample.glb`、`public/textures/autumn-album-sample.webp`、标牌 `autumn-gallery-label.webp` 与书页文字 `autumn-book-text.webp`。当前为树间照片绳庭院，配地面展开书、落叶、纸松鼠及天花纸鹤；五张插页各有独立整图 UV，书页文字也独立于纸纹。运行组件 `src/scene/seasons/autumn/scene.jsx` 的 `photoUrls` 按顺序替换，原 `photoUrl` 仍可统一替换，不需要重烘焙底景。默认使用固定保存的 `public/textures/autumn-photo-previews.webp` 风景示意图集（内置 imagegen 生成，非用户真实照片；重建脚本不重新生成该图集）。入口造型已统一连接独立相册页 `/albums/`，真实照片仍待接入。
 
 冬季来信素材重建：
 
